@@ -6,13 +6,13 @@ STRING3="bCkL87UvfwqphwCdWgyShFYz54hgPVJAg3"
 STRING4="Updating system and installing required packages."
 STRING5="Switching to Aptitude"
 STRING6="Some optional installs"
-STRING7="Start your masternode"
-STRING8="Now, you need to finally start these things in this order"
+STRING7="Starting your masternode"
+STRING8="Now, you need to finally start your masternode in the following order:"
 STRING9="Go to your windows wallet and from the Control wallet debug console please enter"
 STRING10="startmasternode alias false <mymnalias>"
 STRING11="where <mymnalias> is the name of your masternode alias (without brackets)"
 STRING12="once completed please return to VPS and press the space bar"
-
+STRING13=""
 
 #print variable on a screen
 echo $STRING1 
@@ -23,8 +23,10 @@ echo $STRING1
     read -e -p "Install UFW and configure ports? [Y/n] : " UFW
 
     clear
- echo $STRING2    
- echo $STRING3    
+ echo $STRING2
+ echo $STRING13
+ echo $STRING3 
+ echo $STRING13
  echo $STRING4    
     sleep 10    
 
@@ -68,7 +70,9 @@ echo $STRING6
 #Setting up coin
     clear
 echo $STRING2
+echo $STRING13
 echo $STRING3
+echo $STRING13
 echo $STRING4
 sleep 10
 
@@ -96,10 +100,15 @@ masternode=1
     bulwarkd -daemon
 
 echo $STRING7
+echo $STRING13
 echo $STRING8 
+echo $STRING13
 echo $STRING9 
+echo $STRING13
 echo $STRING10
+echo $STRING13
 echo $STRING11
+echo $STRING13
 echo $STRING12
     sleep 10
     
