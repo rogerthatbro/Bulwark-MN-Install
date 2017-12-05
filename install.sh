@@ -99,6 +99,13 @@ masternode=1
     (crontab -l 2>/dev/null; echo '@reboot sleep 60 && bulwark-cli startmasternode local false') | crontab
     bulwarkd -daemon
 
+    clear
+echo $STRING2
+echo $STRING13
+echo $STRING3
+echo $STRING13
+echo $STRING4
+    sleep 10
 echo $STRING7
 echo $STRING13
 echo $STRING8 
