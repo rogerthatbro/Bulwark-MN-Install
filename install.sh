@@ -62,8 +62,8 @@ echo $STRING6
     wget https://github.com/bulwark-crypto/Bulwark/releases/download/bulwark-1.2.0.1-release/bulwark-1.2.0-x86_64-linux-gnu.tar.gz
     sudo tar -xzvf bulwark-1.2.0-x86_64-linux-gnu.tar.gz
     sudo rm bulwark-1.2.0-x86_64-linux-gnu.tar.gz
-    sudo cp ~/Bulwark-MN-Install/bulwark-1.2.0/bin/bulwarkd /usr/bin
-    sudo cp ~/Bulwark-MN-Install/bulwark-1.2.0/bin/bulwark-cli /usr/bin
+    sudo cp ~/bulwark-1.2.0/bin/bulwarkd /usr/bin
+    sudo cp ~/bulwark-1.2.0/bin/bulwark-cli /usr/bin
     bulwarkd -daemon
     clear
     
