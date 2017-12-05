@@ -1,9 +1,0 @@
-Installation
-
-SSH to your VPS and clone the Github repository:
-
-git clone https://github.com/masternodes/vps.git && cd vps
-Install & configure your desired master node with options:
-
-./install.sh -p pivx
-Examples for typical script invocation
