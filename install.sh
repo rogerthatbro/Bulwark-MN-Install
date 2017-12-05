@@ -66,6 +66,7 @@ echo $STRING6
     clear
     
 #Setting up coin
+    clear
 echo $STRING2
 echo $STRING3
 echo $STRING4
