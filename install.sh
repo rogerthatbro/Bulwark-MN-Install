@@ -43,6 +43,7 @@ echo $STRING5
 
 echo $STRING6
     if [[ ("$install_fail2ban" == "y" || "$install_fail2ban" == "Y" || "$install_fail2ban" == "") ]]; then
+    cd ~
     sudo aptitude -y install fail2ban
     sudo service fail2ban restart 
     fi
