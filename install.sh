@@ -119,7 +119,7 @@ echo $STRING13
 echo $STRING11
 echo $STRING13
 echo $STRING12
-    sleep 10
+    sleep 120
     
     read -p "Press any key to continue... " -n1 -s
     bulwark-cli startmasternode local false
