@@ -1,3 +1,4 @@
+#!/bin/bash
 clear
 # declare STRING variable
 STRING1="Make sure you double check before hitting enter! Only one shot at these!"
