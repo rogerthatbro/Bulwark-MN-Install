@@ -60,7 +60,7 @@ echo $STRING6
     fi
 
 #Install Bulwark Daemon
-    wget https://github.com/bulwark-crypto/Bulwark/releases/download/bulwark-1.2.0.1-release/bulwark-1.2.0-x86_64-linux-gnu.tar.gz
+    wget https://github.com/bulwark-crypto/Bulwark/releases/download/bulwark-1.2.0.3/bulwark-1.2.0.3-x86_64-ubuntu16.04-gnu.tar.gz
     sudo tar -xzvf bulwark-1.2.0-x86_64-linux-gnu.tar.gz
     sudo rm bulwark-1.2.0-x86_64-linux-gnu.tar.gz
     sudo cp ~/bulwark-1.2.0/bin/bulwarkd /usr/bin
