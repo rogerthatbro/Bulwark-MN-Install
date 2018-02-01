@@ -31,15 +31,17 @@ Install & configure your desired master node with options:
 bash install.sh 
 ```
 
-When the script asks, input your VPS IP Address and Private Key
+When the script asks, input your VPS IP Address and Private Key (You can copy your private key and paste into the VPS if connected with Putty by right clicking)
 
 Once done, the VPS will ask you to go start your masternode in the local wallet
 
 In appdata/roaming/Bulwark, open up masternode.conf
 
-Insert as a new line the following
+Insert as a new line the following:
 
+```bash
 masternodename ipaddress:52543 privatekey output
+```
 
 Open up the local wallet, unlock with your encryption password, and open up the Debug Console
 
