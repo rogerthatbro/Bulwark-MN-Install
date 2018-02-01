@@ -4,14 +4,14 @@ Generate your Masternode Private Key
 ```bash
 masternode genkey
 
-Write this down.
+Write this down or copy it somewhere safe.
 ```
 View your Output
 
 ```bash
 masternode outputs
 
-Write this down
+Write this down or copy it somewhere safe. 
 ```
 
 SSH (Putty Suggested) to your VPS, login to root, and clone the Github repository:
