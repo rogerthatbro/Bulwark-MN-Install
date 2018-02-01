@@ -3,7 +3,7 @@
 SSH (Putty Suggested) to your VPS, login to root, and clone the Github repository:
 
 ```bash
-git clone https://github.com/masterhash-us/Bulwark-MN-Install.git && cd Bulwark-MN-Install
+git clone https://github.com/bulwark-crypto/Bulwark-MN-Install
 ```
 Navigate to the install folder:
 
