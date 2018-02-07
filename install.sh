@@ -1,6 +1,6 @@
 #!/bin/bash
 clear
-# declare STRING variable
+
 STRING1="Make sure you double check before hitting enter! Only one shot at these!"
 STRING2="If you found this helpful, please donate to BWK Donation: "
 STRING3="bCkL87UvfwqphwCdWgyShFYz54hgPVJAg3"
@@ -14,9 +14,9 @@ STRING10="startmasternode alias false <mymnalias>"
 STRING11="where <mymnalias> is the name of your masternode alias (without brackets)"
 STRING12="once completed please return to VPS and press the space bar"
 STRING13=""
+STRING14="Please Wait a minimum of 15 minutes before proceeding, the node wallet must be synced"
 
-#print variable on a screen
-echo $STRING1 
+echo $STRING1
 
     read -e -p "Server IP Address : " ip
     read -e -p "Masternode Private Key (e.g. 7edfjLCUzGczZi3JQw8GHp434R9kNY33eFyMGeKRymkB56G4324h # THE KEY YOU GENERATED EARLIER) : " key
@@ -26,18 +26,17 @@ echo $STRING1
     clear
  echo $STRING2
  echo $STRING13
- echo $STRING3 
+ echo $STRING3
  echo $STRING13
- echo $STRING4    
-    sleep 10    
+ echo $STRING4
+    sleep 10
 
 # update package and upgrade Ubuntu
     sudo apt-get -y update
     sudo apt-get -y upgrade
     sudo apt-get -y autoremove
-    sudo apt-get install wget nano htop -y
-    sudo apt-get -y install build-essential && sudo apt-get install libtool autotools-dev autoconf automake && sudo apt-get install libssl-dev && sudo apt-get install libboost-all-dev && sudo apt install software-properties-common && sudo add-apt-repository ppa:bitcoin/bitcoin && sudo apt update && sudo apt-get install libdb4.8-dev && sudo apt-get install libdb4.8++-dev && sudo apt-get install libminiupnpc-dev && sudo apt-get install libqt4-dev libprotobuf-dev protobuf-compiler && sudo apt-get install libqrencode-dev && sudo apt-get install -y git && sudo apt-get install pkg-config
-    sudo apt-get -y install libzmq3-dev
+    sudo add-apt-repository ppa:bitcoin/bitcoin
+    sudo apt-get -y install build-essential libtool autotools-dev autoconf automake libssl-dev libboost-all-dev software-properties-common libdb4.8-dev libdb4.8++-dev libminiupnpc-dev libqt4-dev libprotobuf-dev protobuf-compiler libqrencode-dev git pkg-config libzmq3-dev wget nano htop
     clear
 echo $STRING5
     sudo apt-get -y install aptitude
@@ -50,7 +49,7 @@ echo $STRING6
     if [[ ("$install_fail2ban" == "y" || "$install_fail2ban" == "Y" || "$install_fail2ban" == "") ]]; then
     cd ~
     sudo aptitude -y install fail2ban
-    sudo service fail2ban restart 
+    sudo service fail2ban restart
     fi
     if [[ ("$UFW" == "y" || "$UFW" == "Y" || "$UFW" == "") ]]; then
     sudo apt-get install ufw
@@ -71,7 +70,7 @@ echo $STRING6
     sudo cp ~/Bulwark-MN-Install/bulwark-1.2.1/bin/bulwark-cli /usr/bin
     bulwarkd -daemon
     clear
-    
+
 #Setting up coin
     clear
 echo $STRING2
@@ -138,17 +137,18 @@ echo $STRING4
     sleep 10
 echo $STRING7
 echo $STRING13
-echo $STRING8 
+echo $STRING8
 echo $STRING13
-echo $STRING9 
+echo $STRING9
 echo $STRING13
 echo $STRING10
 echo $STRING13
 echo $STRING11
 echo $STRING13
 echo $STRING12
+echo $STRING14
     sleep 120
-    
+
     read -p "Press any key to continue... " -n1 -s
     bulwark-cli startmasternode local false
     bulwark-cli masternode status
