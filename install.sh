@@ -62,13 +62,13 @@ echo $STRING6
     fi
 
 #Install Bulwark Daemon
-    wget https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.1.0/Bulwark121.tgz
-    sudo tar -xzvf Bulwark121.tgz
-    sudo rm Bulwark121.tgz
-    sudo cp bulwarkd /usr/bin
-    sudo cp bulwark-cli /usr/bin
-    sudo cp ~/Bulwark-MN-Install/bulwark-1.2.0/bin/bulwarkd /usr/bin
-    sudo cp ~/Bulwark-MN-Install/bulwark-1.2.0/bin/bulwark-cli /usr/bin
+    wget https://github.com/padraiq/bulwark/releases/download/1.2.1.0/bulwark-1.2.1.0-x86_64-pc-linux-gnu.tar.gz
+    sudo tar -xzvf bulwark-1.2.1.0-x86_64-pc-linux-gnu.tar.gz
+    sudo rm bulwark-1.2.1.0-x86_64-pc-linux-gnu.tar.gz
+    sudo cp ~/bulwark-1.2.1/bin/bulwarkd /usr/bin
+    sudo cp ~/bulwark-1.2.1/bin/bulwark-cli /usr/bin
+    sudo cp ~/Bulwark-MN-Install/bulwark-1.2.1/bin/bulwarkd /usr/bin
+    sudo cp ~/Bulwark-MN-Install/bulwark-1.2.1/bin/bulwark-cli /usr/bin
     bulwarkd -daemon
     clear
     
