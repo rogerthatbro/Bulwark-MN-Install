@@ -35,15 +35,16 @@ sleep 10
 sudo apt-get -y update
 sudo apt-get -y upgrade
 sudo apt-get -y autoremove
-sudo add-apt-repository ppa:bitcoin/bitcoin
-sudo apt-get -y install build-essential libtool autotools-dev autoconf automake libssl-dev libboost-all-dev software-properties-common libdb4.8-dev libdb4.8++-dev libminiupnpc-dev libqt4-dev libprotobuf-dev protobuf-compiler libqrencode-dev git pkg-config libzmq3-dev wget nano htop
+sudo apt-get install wget nano htop -y
+sudo apt-get install build-essential && sudo apt-get install libtool autotools-dev autoconf automake && sudo apt-get install libssl-dev && sudo apt-get install libboost-all-dev && sudo apt install software-properties-common && sudo add-apt-repository ppa:bitcoin/bitcoin && sudo apt update && sudo apt-get install libdb4.8-dev && sudo apt-get install libdb4.8++-dev && sudo apt-get install libminiupnpc-dev && sudo apt-get install libqt4-dev libprotobuf-dev protobuf-compiler && sudo apt-get install libqrencode-dev && sudo apt-get install -y git && sudo apt-get install pkg-config
+sudo apt-get -y install libzmq3-dev
 clear
 echo $STRING5
 sudo apt-get -y install aptitude
 
 #Generating Random Passwords
-password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-password2=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+password=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+password2=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 
 echo $STRING6
 if [[ ("$install_fail2ban" == "y" || "$install_fail2ban" == "Y" || "$install_fail2ban" == "") ]]; then
@@ -95,31 +96,22 @@ bind='$ip':52543
 masternodeaddr='$ip'
 masternodeprivkey='$key'
 masternode=1
-addnode=213.32.23.65:52543
-addnode=199.247.7.119:52543
-addnode=185.223.30.31:52543
-addnode=80.209.229.92:52543
-addnode=45.33.58.91:52543
-addnode=46.101.131.50:52543
-addnode=159.203.123.44:52543
-addnode=209.250.232.68:42870
-addnode=199.247.4.86:39654
-addnode=109.101.221.204:57374
-addnode=46.149.120.21:53380
-addnode=86.149.228.161:54055
-addnode=45.77.138.177:52543
-addnode=207.148.1.60:52543
-addnode=114.94.190.239:54954
-addnode=45.63.49.239:38716
-addnode=80.122.43.78:52543
-addnode=45.32.221.80:52543
-addnode=108.61.188.251:52543
-addnode=73.73.160.113:51356
-addnode=134.255.252.218:55912
-addnode=104.238.157.205:52543
-addnode=45.76.118.238:52543
-addnode=47.88.220.108:52543
-addnode=104.156.225.96:52543
+addnode=45.76.211.75:52543
+addnode=104.238.156.40:52543
+addnode=209.250.228.76:52543
+addnode=45.63.49.239:52543
+addnode=45.32.178.119:52543
+addnode=104.207.150.72:52543
+addnode=80.209.238.34:52543
+addnode=45.79.152.153:52543
+addnode=45.77.252.23:52543
+addnode=52.55.238.125:52543
+addnode=207.148.20.225:52543
+addnode=172.104.74.77:52543
+addnode=212.24.111.220:52543
+addnode=54.172.15.201:52543
+addnode=207.246.119.12:52543
+addnode=104.156.245.208:52543
 ' | sudo -E tee ~/.bulwark/bulwark.conf >/dev/null 2>&1
 sudo chmod 0600 ~/.bulwark/bulwark.conf
 
