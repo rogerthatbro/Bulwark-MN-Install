@@ -61,9 +61,9 @@ if [[ ("$UFW" == "y" || "$UFW" == "Y" || "$UFW" == "") ]]; then
 fi
 
 #Install Bulwark Daemon
-wget https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.1.0/bulwark-1.2.1.0-x86_64-pc-linux-gnu.tar.gz
-sudo tar -xzvf bulwark-1.2.1.0-x86_64-pc-linux-gnu.tar.gz
-sudo rm bulwark-1.2.1.0-x86_64-pc-linux-gnu.tar.gz
+wget https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.1.0/bulwark-1.2.1.0-x86_64-ubuntu17.10-gnu.gz
+sudo tar -xzvf bulwark-1.2.1.0-x86_64-ubuntu17.10-gnu.gz
+sudo rm bulwark-1.2.1.0-x86_64-ubuntu17.10-gnu.gz
 sudo cp ~/bulwark-1.2.1/bin/bulwarkd /usr/bin
 sudo cp ~/bulwark-1.2.1/bin/bulwark-cli /usr/bin
 sudo cp ~/Bulwark-MN-Install/bulwark-1.2.1/bin/bulwarkd /usr/bin
