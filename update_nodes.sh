@@ -1,7 +1,9 @@
 #!/bin/bash
 clear
 
-killall -9 bulwarkd
+bulwark-cli stop
+
+sleep 10
 
 rm -rf ~/.bulwark/blocks
 rm -rf ~/.bulwark/database
