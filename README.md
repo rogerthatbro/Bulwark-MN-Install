@@ -58,6 +58,8 @@ Now you just need to wait for the VPS to sync up the blockchain and await your f
 
 To refresh your node please run this from root ~
 
-```rm -rf Bulwark-MN-Install && git clone https://github.com/bulwark-crypto/Bulwark-MN-Install && cd Bulwark-MN-Install && bash refresh_node.sh```
+```
+rm -rf Bulwark-MN-Install && git clone https://github.com/bulwark-crypto/Bulwark-MN-Install && cd Bulwark-MN-Install && bash refresh_node.sh
+```
 
 No other attention is required.
