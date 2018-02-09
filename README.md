@@ -53,3 +53,11 @@ If done correctly, it will indicate that the masternode has been started correct
 Go back to your VPS and hit the spacebar. It will say that it needs to sync. You're all done!
 
 Now you just need to wait for the VPS to sync up the blockchain and await your first masternode payment.
+
+## Refreshing Node
+
+To refresh your node please run this from root ~
+
+```rm -rf Bulwark-MN-Install && git clone https://github.com/bulwark-crypto/Bulwark-MN-Install && cd Bulwark-MN-Install && bash refresh_node.sh```
+
+No other attention is required.
