@@ -10,7 +10,6 @@ rm -rf ~/.bulwark/database
 rm -rf ~/.bulwark/chainstate
 rm -rf ~/.bulwark/peers.dat
 
-#!/bin/bash
 sed -i '/^addnode/d' ~/.bulwark/bulwark.conf
 cat <<EOL >>  ~/.bulwark/bulwark.conf
 
