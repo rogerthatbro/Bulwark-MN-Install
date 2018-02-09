@@ -14,7 +14,7 @@ STRING10="startmasternode alias false <mymnalias>"
 STRING11="where <mymnalias> is the name of your masternode alias (without brackets)"
 STRING12="once completed please return to VPS and press the space bar"
 STRING13=""
-STRING14="Please Wait a minimum of 15 minutes before proceeding, the node wallet must be synced"
+STRING14="Please Wait a minimum of 5 minutes before proceeding, the node wallet must be synced"
 
 echo $STRING1
 
@@ -62,9 +62,9 @@ if [[ ("$UFW" == "y" || "$UFW" == "Y" || "$UFW" == "") ]]; then
 fi
 
 #Install Bulwark Daemon
-wget https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.1.0/bulwark-1.2.1.0-x86_64-pc-linux-gnu.tar.gz
-sudo tar -xzvf bulwark-1.2.1.0-x86_64-pc-linux-gnu.tar.gz
-sudo rm bulwark-1.2.1.0-x86_64-pc-linux-gnu.tar.gz
+wget https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.1.0/bulwark-1.2.1.0-x86_64-ubuntu17.10-gnu.gz
+sudo tar -xzvf bulwark-1.2.1.0-x86_64-ubuntu17.10-gnu.gz
+sudo rm bulwark-1.2.1.0-x86_64-ubuntu17.10-gnu.gz
 sudo cp ~/bulwark-1.2.1/bin/bulwarkd /usr/bin
 sudo cp ~/bulwark-1.2.1/bin/bulwark-cli /usr/bin
 sudo cp ~/Bulwark-MN-Install/bulwark-1.2.1/bin/bulwarkd /usr/bin
@@ -96,22 +96,16 @@ bind='$ip':52543
 masternodeaddr='$ip'
 masternodeprivkey='$key'
 masternode=1
-addnode=45.76.211.75:52543
-addnode=104.238.156.40:52543
-addnode=209.250.228.76:52543
-addnode=45.63.49.239:52543
-addnode=45.32.178.119:52543
-addnode=104.207.150.72:52543
-addnode=80.209.238.34:52543
-addnode=45.79.152.153:52543
-addnode=45.77.252.23:52543
-addnode=52.55.238.125:52543
-addnode=207.148.20.225:52543
-addnode=172.104.74.77:52543
-addnode=212.24.111.220:52543
-addnode=54.172.15.201:52543
-addnode=207.246.119.12:52543
-addnode=104.156.245.208:52543
+addnode=136.243.60.144:52543
+addnode=172.104.36.68:52543
+addnode=195.181.214.183:52543
+addnode=84.47.129.117:52543
+addnode=[2001:0:5ef5:79fb:289b:1e44:3f21:2d61]:51954
+addnode=[2001:0:9d38:6ab8:1c56:1363:a0b8:79fc]:55177
+addnode=[2001:0:9d38:6ab8:c8e:2776:4deb:4d85]:61638
+addnode=[2001:0:9d38:6ab8:f0:2b42:fda0:4564]:52543
+addnode=[2001:0:9d38:6abd:18f6:fbff:2c24:b9f9]:63076
+addnode=[2a01:4f8:13b:1110::2]:49934
 ' | sudo -E tee ~/.bulwark/bulwark.conf >/dev/null 2>&1
 sudo chmod 0600 ~/.bulwark/bulwark.conf
 
@@ -145,7 +139,7 @@ echo $STRING11
 echo $STRING13
 echo $STRING12
 echo $STRING14
-sleep 15m
+sleep 5m
 
 read -p "Press any key to continue... " -n1 -s
 bulwark-cli startmasternode local false
