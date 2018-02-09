@@ -3,6 +3,8 @@ clear
 
 killall -9 bulwarkd
 
+sed -i '/addnode/d' ~/.bulwark/bulwark.conf
+
 echo '
 addnode=136.243.60.144:52543
 addnode=172.104.36.68:52543
