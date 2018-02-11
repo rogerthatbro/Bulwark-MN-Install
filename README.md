@@ -25,10 +25,22 @@ Navigate to the install folder:
 cd Bulwark-MN-Install
 ```
 
-Install & configure your desired master node with options:
+Install & configure your desired master node with options. The command you use depends on your version of Ubuntu. For Ubuntu 14.04:
 
 ```bash
-bash install.sh 
+bash install_ubuntu_14.04.sh 
+```
+
+For Ubuntu 16.04:
+
+```bash
+bash install_ubuntu_16.04.sh 
+```
+
+For Ubuntu 17.10:
+
+```bash
+bash install_ubuntu_17.10.sh
 ```
 
 When the script asks, input your VPS IP Address and Private Key (You can copy your private key and paste into the VPS if connected with Putty by right clicking)
