@@ -25,7 +25,9 @@ Navigate to the install folder:
 cd Bulwark-MN-Install
 ```
 
-Install & configure your desired master node with options. The command you use depends on your version of Ubuntu. For Ubuntu 14.04:
+Install & configure your desired master node with options. The command you use depends on your version of Ubuntu. 
+
+For Ubuntu 14.04:
 
 ```bash
 bash install_ubuntu_14.04.sh 
