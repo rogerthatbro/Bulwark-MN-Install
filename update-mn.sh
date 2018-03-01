@@ -1,10 +1,9 @@
 #!/bin/bash
 
-### THIS IS UNTESTED, PROCEED WITH CAUTION!
-
 clear
 echo "This script will update your masternode to version 1.2.2."
-read -p "Press Ctrl-C to abort or any other key to continue... " -n1 -s
+read -p "Press Ctrl-C to abort or any other key to continue. " -n1 -s
+clear
 echo "Please enter your password to enter administrator mode:"
 sudo true
 echo "Shutting down masternode..."
@@ -20,6 +19,8 @@ rm -rf ./bulwark-temp
 echo "Restarting Bulwark daemon..."
 bulwarkd -daemon
 clear
-echo "Starting masternode..."
+read -p "Please wait at least 5 minutes for the wallet to load, then press any key to continue." -n1 -s
+clear
+echo "Starting masternode..." # TODO: Need to wait for wallet to load before starting...
 bulwark-cli startmasternode local false
 bulwark-cli masternode status
