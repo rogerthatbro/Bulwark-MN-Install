@@ -83,7 +83,5 @@ No other attention is required.
 To update your node please run this from root ~ and follow the instructions:
 
 ```
-cd Bulwark-MN-Install
-git pull
-bash update-mn.sh
+cd Bulwark-MN-Install && git pull && bash update-mn.sh
 ```
