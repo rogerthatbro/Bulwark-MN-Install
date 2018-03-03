@@ -40,8 +40,8 @@ sleep 10
 sudo apt-get -y update
 sudo apt-get -y upgrade
 sudo apt-get -y autoremove
-sudo apt-get install wget nano htop -y
-sudo apt-get install build-essential && sudo apt-get install libtool autotools-dev autoconf automake && sudo apt-get install libssl-dev && sudo apt-get install libboost-all-dev && sudo apt install software-properties-common && sudo add-apt-repository ppa:bitcoin/bitcoin && sudo apt update && sudo apt-get install libdb4.8-dev && sudo apt-get install libdb4.8++-dev && sudo apt-get install libminiupnpc-dev && sudo apt-get install libqt4-dev libprotobuf-dev protobuf-compiler && sudo apt-get install libqrencode-dev && sudo apt-get install -y git && sudo apt-get install pkg-config
+sudo apt-get -y install wget nano htop
+sudo apt-get -y install build-essential && sudo apt-get -y install libtool autotools-dev autoconf automake && sudo apt-get -y install libssl-dev && sudo apt-get -y install libboost-all-dev && sudo apt install software-properties-common && sudo add-apt-repository ppa:bitcoin/bitcoin && sudo apt update && sudo apt-get -y install libdb4.8-dev && sudo apt-get -y install libdb4.8++-dev && sudo apt-get -y install libminiupnpc-dev && sudo apt-get -y install libqt4-dev libprotobuf-dev protobuf-compiler && sudo apt-get -y install libqrencode-dev && sudo apt-get -y install -y git && sudo apt-get -y install pkg-config
 sudo apt-get -y install libzmq3-dev
 clear
 echo $STRING5
@@ -58,7 +58,7 @@ if [[ ("$install_fail2ban" == "y" || "$install_fail2ban" == "Y" || "$install_fai
   sudo service fail2ban restart
 fi
 if [[ ("$UFW" == "y" || "$UFW" == "Y" || "$UFW" == "") ]]; then
-  sudo apt-get install ufw
+  sudo apt-get -y install ufw
   sudo ufw default deny incoming
   sudo ufw default allow outgoing
   sudo ufw allow ssh
