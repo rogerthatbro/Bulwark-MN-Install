@@ -1,6 +1,6 @@
 ## Funding your Masternode
 
-* First, we will do the initial collateral TX and send exactly 5000 BWK to one of our addresses. To keep things sorted in case we setup more masternodes we will label the addresses we use. 
+* First, we will do the initial collateral TX and send exactly 5000 BWK to one of our addresses. To keep things sorted in case we setup more masternodes we will label the addresses we use.
 
   - Open your BWK wallet and switch to the "Receive" tab.
 
@@ -17,20 +17,31 @@
 ## Installation & Setting up your Server
 
 Generate your Masternode Private Key
+
+In your wallet, open Tools -> Debug console and run the following command:
+
 ```bash
 masternode genkey
+```
 
 Write this down or copy it somewhere safe.
-```
-View your Output
+
+View your Output (Also in the Debug console):
 
 ```bash
 masternode outputs
-
-Write this down or copy it somewhere safe.
 ```
 
-SSH (Putty Suggested) to your VPS, login to root, and clone the Github repository:
+Write this down or copy it somewhere safe.
+
+
+SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login to root, and install git if it isn't installed already.
+
+```bash
+apt-get -y install git
+```
+
+Then clone the Github repository.
 
 ```bash
 git clone https://github.com/bulwark-crypto/Bulwark-MN-Install
@@ -41,27 +52,23 @@ Navigate to the install folder:
 cd Bulwark-MN-Install
 ```
 
-Install & configure your desired master node with options. The command you use depends on your version of Ubuntu.
-
-For Ubuntu 14.04:
+Install & configure your desired master node with options.
 
 ```bash
-bash install_ubuntu_14.04.sh
-```
-
-For Ubuntu 16.04:
-
-```bash
-bash install_ubuntu_16.04.sh
-```
-
-For Ubuntu 17.10:
-
-```bash
-bash install_ubuntu_17.10.sh
+bash install.sh
 ```
 
 When the script asks, input your VPS IP Address and Private Key (You can copy your private key and paste into the VPS if connected with Putty by right clicking)
+
+If you're asked at any point `Do you want to continue? [Y/n]` press Enter.
+
+If you get the following message, press Enter:
+
+```
+No longer supports precise, due to its ancient gcc and Boost versions.
+More info: https://launchpad.net/~bitcoin/+archive/ubuntu/bitcoin
+Press [ENTER] to continue or ctrl-c to cancel adding it
+```
 
 Once done, the VPS will ask you to go start your masternode in the local wallet
 
@@ -99,5 +106,5 @@ No other attention is required.
 To update your node please run this from root ~ and follow the instructions:
 
 ```
-cd Bulwark-MN-Install && git pull && bash update-mn.sh
+cd Bulwark-MN-Install && git pull && bash update_node.sh
 ```
