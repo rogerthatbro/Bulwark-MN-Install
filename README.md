@@ -54,6 +54,14 @@ bash install.sh
 
 When the script asks, input your VPS IP Address and Private Key (You can copy your private key and paste into the VPS if connected with Putty by right clicking)
 
+If you get the following message simply press Enter:
+
+```
+No longer supports precise, due to its ancient gcc and Boost versions.
+More info: https://launchpad.net/~bitcoin/+archive/ubuntu/bitcoin
+Press [ENTER] to continue or ctrl-c to cancel adding it
+```
+
 Once done, the VPS will ask you to go start your masternode in the local wallet
 
 In appdata/roaming/Bulwark, open up masternode.conf
