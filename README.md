@@ -35,7 +35,13 @@ masternode outputs
 Write this down or copy it somewhere safe.
 
 
-SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login to root, and clone the Github repository:
+SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login to root, and install git if it isn't installed already.
+
+```bash
+apt-get -y install git
+```
+
+Then clone the Github repository.
 
 ```bash
 git clone https://github.com/bulwark-crypto/Bulwark-MN-Install
@@ -54,7 +60,9 @@ bash install.sh
 
 When the script asks, input your VPS IP Address and Private Key (You can copy your private key and paste into the VPS if connected with Putty by right clicking)
 
-If you get the following message simply press Enter:
+If you're asked at any point `Do you want to continue? [Y/n]` press Enter.
+
+If you get the following message, press Enter:
 
 ```
 No longer supports precise, due to its ancient gcc and Boost versions.
