@@ -1,5 +1,9 @@
 #!/bin/bash
 
+TARBALLURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.2/bulwark-1.2.2.0-linux64.tar.gz"
+TARBALLNAME="bulwark-1.2.2.0-linux64.tar.gz"
+BWKVERSION="1.2.2.0"
+
 clear
 echo "This script will update your masternode to version 1.2.2."
 read -p "Press Ctrl-C to abort or any other key to continue. " -n1 -s
@@ -10,10 +14,10 @@ echo "Shutting down masternode..."
 bulwark-cli stop
 echo "Installing Bulwark 1.2.2..."
 mkdir ./bulwark-temp && cd ./bulwark-temp
-wget https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.2/bulwark-1.2.2.0-linux64.tar.gz
-tar -xzvf bulwark-1.2.2.0-linux64.tar.gz
-yes | sudo cp -rf ./bin/bulwarkd /usr/bin
-yes | sudo cp -rf ./bin/bulwark-cli /usr/bin
+wget $TARBALLURL
+tar -xzvf $TARBALLNAME && mv bin bulwark-$BWKVERSION
+yes | sudo cp -rf ./bulwark-$BWKVERSION/bulwarkd /usr/bin
+yes | sudo cp -rf ./bulwark-$BWKVERSION/bulwark-cli /usr/bin
 cd ..
 rm -rf ./bulwark-temp
 echo "Restarting Bulwark daemon..."
