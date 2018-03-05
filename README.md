@@ -77,7 +77,7 @@ In appdata/roaming/Bulwark, open up masternode.conf
 Insert as a new line the following:
 
 ```bash
-masternodename ipaddress:52543 privatekey collateralTxID outputID
+masternodename ipaddress:52543 mnprivatekey collateralTxID outputID
 ```
 
 An example would be
@@ -86,7 +86,7 @@ An example would be
 mn1 127.0.0.2:52543 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0
 ```
 
-_masternodename_ is a name you choose, _ipaddress_ is the public IP of your VPS, _privatekey_ is the output from `masternode genkey`, and _collateralTxID_ & _outputID_ come from `masternode outputs`.
+_masternodename_ is a name you choose, _ipaddress_ is the public IP of your VPS, _mnprivatekey_ is the output from `masternode genkey`, and _collateralTxID_ & _outputID_ come from `masternode outputs`.
 
 Open up the local wallet, unlock with your encryption password, and open up the Debug Console
 
