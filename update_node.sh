@@ -1,8 +1,8 @@
 #!/bin/bash
 
-TARBALLURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.2/bulwark-1.2.2.0-linux64.tar.gz"
-TARBALLNAME="bulwark-1.2.2.0-linux64.tar.gz"
-BWKVERSION="1.2.2.0"
+TARBALLURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.3/bulwark-1.2.3.0-linux64.tar.gz"
+TARBALLNAME="bulwark-1.2.3.0-linux64.tar.gz"
+BWKVERSION="1.2.3.0"
 
 clear
 echo "This script will update your masternode to version 1.2.2."
