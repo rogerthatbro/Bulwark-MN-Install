@@ -19,7 +19,9 @@ else
   su -c "bulwark-cli stop" $BWKUSER
 fi
 
-sleep 10
+echo "Refreshing node, please wait."
+
+sleep 5
 
 rm -rf $USERHOME/.bulwark/blocks
 rm -rf $USERHOME/.bulwark/database

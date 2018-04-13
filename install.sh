@@ -177,7 +177,7 @@ clear
 echo "Your masternode is syncing. Please wait for this process to finish."
 echo "This can take up to a few hours. Do not close this window." && echo ""
 
-until su -c "bulwark-cli startmasternode local false | grep 'successfully started' > /dev/null" $USER; do
+until su -c "bulwark-cli startmasternode local false 2>/dev/null | grep 'successfully started' > /dev/null" $USER; do
   for (( i=0; i<${#CHARS}; i++ )); do
     sleep 2
     echo -en "${CHARS:$i:1}" "\r"

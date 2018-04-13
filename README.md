@@ -24,6 +24,8 @@ In your wallet, open Tools -> Debug console and run the following command to get
 masternode genkey
 ```
 
+Please note: If you plan to set up more than one masternode, you need to create a key with the above command for each one.
+
 Run this command to get your output information:
 
 ```bash
@@ -78,6 +80,10 @@ bash install.sh
 ```
 
 When the script asks, input your VPS IP Address and Private Key (You can copy your private key and paste into the VPS if connected with Putty by right clicking)
+
+The installer will present you a few options.
+
+**PLEASE NOTE**: Do not choose the advanced installation option unless you have experience with Linux and know what you are doing - if you do and something goes wrong, the Bulwark team CANNOT help you, and you will have to restart the installation.
 
 Follow the instructions on screen.
 
