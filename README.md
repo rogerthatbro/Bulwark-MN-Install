@@ -56,27 +56,10 @@ _masternodename_ is a name you choose, _ipaddress_ is the public IP of your VPS,
 
 Restart and unlock your wallet.
 
-SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login as root, and install git if it isn't installed already.
+SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login as root, and run the following command:
 
 ```bash
-apt-get -y install git
-```
-
-Then clone the Github repository.
-
-```bash
-git clone https://github.com/bulwark-crypto/Bulwark-MN-Install
-```
-Navigate to the install folder:
-
-```bash
-cd Bulwark-MN-Install
-```
-
-Install & configure your desired master node with options.
-
-```bash
-bash install.sh
+bash <( curl https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install/master/install.sh )
 ```
 
 When the script asks, input your VPS IP Address and Private Key (You can copy your private key and paste into the VPS if connected with Putty by right clicking)
@@ -94,8 +77,6 @@ Your masternode is syncing. Please wait for this process to finish.
 This can take up to a few hours. Do not close this window.
 ```
 
-It's possible you'll see errors like  `error: {"code":-28,"message":"Loading wallet... (73.73 %)"}` - this is fine, just wait for the wallet to finish syncing, afterwards your masternode will start.
-
 Once you see "Masternode setup completed." on screen, you are done.
 
 ## Refreshing Node
@@ -104,7 +85,7 @@ If your masternode is stuck on a block or behaving badly, you can refresh it.
 Please note that this script must be run as root.
 
 ```
-rm -rf Bulwark-MN-Install && git clone https://github.com/bulwark-crypto/Bulwark-MN-Install && cd Bulwark-MN-Install && bash refresh_node.sh
+bash <( curl https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install/master/refresh_node.sh )
 ```
 
 No other attention is required.
@@ -115,5 +96,5 @@ To update your node please run this command and follow the instructions.
 Please note that this script must be run as root.
 
 ```
-rm -rf Bulwark-MN-Install && git clone https://github.com/bulwark-crypto/Bulwark-MN-Install && cd Bulwark-MN-Install && bash update_node.sh
+bash <( curl https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install/master/update_node.sh )
 ```
