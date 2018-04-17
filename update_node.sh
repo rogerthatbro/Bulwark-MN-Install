@@ -1,13 +1,13 @@
 #!/bin/bash
 
-TARBALLURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.3/bulwark-1.2.3.0-linux64.tar.gz"
-TARBALLNAME="bulwark-1.2.3.0-linux64.tar.gz"
-BWKVERSION="1.2.3.0"
+TARBALLURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.4/bulwark-1.2.4.0-linux64.tar.gz"
+TARBALLNAME="bulwark-1.2.4.0-linux64.tar.gz"
+BWKVERSION="1.2.4.0"
 
 CHARS="/-\|"
 
 clear
-echo "This script will update your masternode to version 1.2.3."
+echo "This script will update your masternode to version $BWKVERSION"
 read -p "Press Ctrl-C to abort or any other key to continue. " -n1 -s
 clear
 

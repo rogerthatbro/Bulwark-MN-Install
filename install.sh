@@ -2,11 +2,11 @@
 clear
 
 # Set these to change the version of Bulwark to install
-TARBALLURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.3/bulwark-1.2.3.0-linux64.tar.gz"
-TARBALLNAME="bulwark-1.2.3.0-linux64.tar.gz"
-BOOTSTRAPURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.3/bootstrap.dat.zip"
+TARBALLURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.4/bulwark-1.2.4.0-linux64.tar.gz"
+TARBALLNAME="bulwark-1.2.4.0-linux64.tar.gz"
+BOOTSTRAPURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.4/bootstrap.dat.zip"
 BOOTSTRAPARCHIVE="bootstrap.dat.zip"
-BWKVERSION="1.2.3.0"
+BWKVERSION="1.2.4.0"
 
 # Check if we are root
 if [ "$(id -u)" != "0" ]; then
