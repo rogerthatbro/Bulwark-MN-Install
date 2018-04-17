@@ -56,15 +56,15 @@ _masternodename_ is a name you choose, _ipaddress_ is the public IP of your VPS,
 
 Restart and unlock your wallet.
 
-SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login as root, and run the following command:
+SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login as root (**Please note:** It's normal that you don't see your password after typing or pasting it) and run the following command:
 
 ```bash
 bash <( curl https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install/master/install.sh )
 ```
 
-When the script asks, input your VPS IP Address and Private Key (You can copy your private key and paste into the VPS if connected with Putty by right clicking)
+When the script asks, confirm your VPS IP Address and paste your masternode key (You can copy your key and paste into the VPS if connected with Putty by right clicking)
 
-The installer will present you a few options.
+The installer will then present you with a few options.
 
 **PLEASE NOTE**: Do not choose the advanced installation option unless you have experience with Linux and know what you are doing - if you do and something goes wrong, the Bulwark team CANNOT help you, and you will have to restart the installation.
 
