@@ -75,4 +75,13 @@ done
 
 su -c "bulwark-cli masternode status" $USER
 
-echo "" && echo "Masternode update completed." && echo ""
+cat << EOL
+
+Masternode update completed. Please go to your desktop wallet and enter
+the following line into your debug console:
+
+    startmasternode alias false <mymnalias>
+
+where <mymnalias> is the name of your masternode alias (without brackets)
+
+EOL

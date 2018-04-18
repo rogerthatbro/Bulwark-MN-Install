@@ -173,7 +173,7 @@ sudo systemctl start bulwarkd
 
 clear
 
-cat << EOF
+cat << EOL
 
 Now, you need to start your masternode. Please go to your desktop wallet and
 enter the following line into your debug console:
@@ -182,7 +182,7 @@ startmasternode alias false <mymnalias>
 
 where <mymnalias> is the name of your masternode alias (without brackets)
 
-EOF
+EOL
 
 read -p "Press any key to continue after you've done that. " -n1 -s
 
