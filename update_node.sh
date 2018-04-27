@@ -26,7 +26,7 @@ else
   su -c "bulwark-cli stop" $USER
 fi
 
-echo "Installing Bulwark 1.2.3..."
+echo "Installing Bulwark $BWKVERSION..."
 mkdir ./bulwark-temp && cd ./bulwark-temp
 wget $TARBALLURL
 tar -xzvf $TARBALLNAME && mv bin bulwark-$BWKVERSION
