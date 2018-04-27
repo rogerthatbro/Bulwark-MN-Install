@@ -64,6 +64,21 @@ EOL
 fi
 clear
 
+cat << EOL
+
+Now, you need to start your masternode. Please go to your desktop wallet and
+enter the following line into your debug console:
+
+startmasternode alias false <mymnalias>
+
+where <mymnalias> is the name of your masternode alias (without brackets)
+
+EOL
+
+read -p "Press any key to continue after you've done that. " -n1 -s
+
+clear
+
 echo "Your masternode is syncing. Please wait for this process to finish."
 
 until su -c "bulwark-cli startmasternode local false 2>/dev/null | grep 'successfully started' > /dev/null" $USER; do
