@@ -1,4 +1,87 @@
 #!/bin/bash
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -a|--advanced)
+    ADVANCED="y"
+    shift
+    ;;
+    -n|--normal)
+    ADVANCED="n"
+    shift
+    ;;
+    -i|--externalip)
+    EXTERNALIP="$2"
+    ARGUMENTIP="y"
+    shift
+    shift
+    ;;
+    -k|--privatekey)
+    KEY="$2"
+    shift
+    shift
+    ;;
+    -f|--fail2ban)
+    FAIL2BAN="y"
+    shift
+    ;;
+    --no-fail2ban)
+    FAIL2BAN="n"
+    shift
+    ;;
+    -u|--ufw)
+    UFW="y"
+    shift
+    ;;
+    --no-ufw)
+    UFW="n"
+    shift
+    ;;
+    -b|--bootstrap)
+    BOOTSTRAP="y"
+    shift
+    ;;
+    --no-bootstrap)
+    BOOTSTRAP="n"
+    shift
+    ;;
+    -h|--help)
+    cat << EOL
+
+Bulwark Masternode installer arguments:
+
+    -n --normal               : Run installer in normal mode
+    -a --advanced             : Run installer in advanced mode
+    -i --externalip <address> : Public IP address of VPS
+    -k --privatekey <key>     : Private key to use
+    -f --fail2ban             : Install Fail2Ban
+    --no-fail2ban             : Don't install Fail2Ban
+    -u --ufw                  : Install UFW
+    --no-ufw                  : Don't install UFW
+    -b --bootstrap            : Sync node using Bootstrap
+    --no-bootstrap            : Don't use Bootstrap
+    -h --help                 : Display this help text.
+
+EOL
+    exit
+    ;;
+    *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+echo ADVANCED        = "${ADVANCED}"
+echo EXTERNALIP      = "${EXTERNALIP}"
+echo KEY             = "${KEY}"
+echo BOOTSTRAP       = "${BOOTSTRAP}"
+
 clear
 
 # Set these to change the version of Bulwark to install
@@ -7,6 +90,8 @@ TARBALLNAME="bulwark-1.2.4.0-linux64.tar.gz"
 BOOTSTRAPURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.4/bootstrap.dat.zip"
 BOOTSTRAPARCHIVE="bootstrap.dat.zip"
 BWKVERSION="1.2.4.0"
+
+#!/bin/bash
 
 # Check if we are root
 if [ "$(id -u)" != "0" ]; then
@@ -35,9 +120,12 @@ systemctl --version >/dev/null 2>&1 || { echo "systemd is required. Are you usin
 
 # CHARS is used for the loading animation further down.
 CHARS="/-\|"
+if [ -z "$EXTERNALIP" ]; then
 EXTERNALIP=`dig +short myip.opendns.com @resolver1.opendns.com`
+fi
 clear
 
+if [ -z "$ADVANCED" ]; then
 echo "
 
     ___T_
@@ -69,8 +157,11 @@ echo "
 "
 
 sleep 5
+fi
 
+if [ -z "$ADVANCED" ]; then
 read -e -p "Use the Advanced Installation? [N/y] : " ADVANCED
+fi
 
 if [[ ("$ADVANCED" == "y" || "$ADVANCED" == "Y") ]]; then
 
@@ -89,11 +180,25 @@ fi
 
 USERHOME=`eval echo "~$USER"`
 
+if [ -z "$ARGUMENTIP" ]; then
 read -e -p "Server IP Address: " -i $EXTERNALIP -e IP
+fi
+
+if [ -z "$KEY" ]; then
 read -e -p "Masternode Private Key (e.g. 7edfjLCUzGczZi3JQw8GHp434R9kNY33eFyMGeKRymkB56G4324h # THE KEY YOU GENERATED EARLIER) : " KEY
+fi
+
+if [ -z "$FAIL2BAN" ]; then
 read -e -p "Install Fail2ban? [Y/n] : " FAIL2BAN
+fi
+
+if [ -z "$UFW" ]; then
 read -e -p "Install UFW and configure ports? [Y/n] : " UFW
+fi
+
+if [ -z "$BOOTSTRAP" ]; then
 read -e -p "Do you want to use our bootstrap file to speed the syncing process? [Y/n] : " BOOTSTRAP
+fi
 
 clear
 
