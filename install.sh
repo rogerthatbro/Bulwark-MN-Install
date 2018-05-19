@@ -12,6 +12,9 @@ case $key in
     ;;
     -n|--normal)
     ADVANCED="n"
+    FAIL2BAN="y"
+    UFW="y"
+    BOOTSTRAP="y"
     shift
     ;;
     -i|--externalip)
@@ -76,11 +79,6 @@ EOL
 esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
-
-echo ADVANCED        = "${ADVANCED}"
-echo EXTERNALIP      = "${EXTERNALIP}"
-echo KEY             = "${KEY}"
-echo BOOTSTRAP       = "${BOOTSTRAP}"
 
 clear
 
@@ -175,6 +173,9 @@ sleep 1
 else
 
 USER=root
+FAIL2BAN="y"
+UFW="y"
+BOOTSTRAP="y"
 
 fi
 
@@ -290,6 +291,18 @@ sudo systemctl start bulwarkd
 
 clear
 
+echo "Your masternode is syncing. Please wait for this process to finish."
+echo "This can take up to a few hours. Do not close this window." && echo ""
+
+until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do
+  for (( i=0; i<${#CHARS}; i++ )); do
+    sleep 2
+    echo -en "${CHARS:$i:1}" "\r"
+  done
+done
+
+clear
+
 cat << EOL
 
 Now, you need to start your masternode. Please go to your desktop wallet and
@@ -301,19 +314,9 @@ where <mymnalias> is the name of your masternode alias (without brackets)
 
 EOL
 
-read -p "Press any key to continue after you've done that. " -n1 -s
+read -p "Press Enter to continue after you've done that. " -n1 -s
 
 clear
-
-echo "Your masternode is syncing. Please wait for this process to finish."
-echo "This can take up to a few hours. Do not close this window." && echo ""
-
-until su -c "bulwark-cli startmasternode local false 2>/dev/null | grep 'successfully started' > /dev/null" $USER; do
-  for (( i=0; i<${#CHARS}; i++ )); do
-    sleep 2
-    echo -en "${CHARS:$i:1}" "\r"
-  done
-done
 
 sleep 1
 su -c "/usr/local/bin/bulwark-cli startmasternode local false" $USER
