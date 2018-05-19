@@ -98,7 +98,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Check if we have enough memory
-if [[ `free -m | awk '/^Mem:/{print $2}'` -lt 900 ]]; then
+if [[ `free -m | awk '/^Mem:/{print $2}'` -lt 850 ]]; then
   echo "This installation requires at least 1GB of RAM.";
   exit 1
 fi
@@ -133,22 +133,19 @@ echo "
  ()/|___|\()
     |_|_|
     /_|_\  ------- MASTERNODE INSTALLER v2 -------+
- |                                                |
- |You can choose between two installation options:|::
- |             default and advanced.              |::
- |                                                |::
- | The advanced installation will install and run |::
- |  the masternode under a non-root user. If you  |::
- |  don't know what that means, use the default   |::
- |              installation method.              |::
- |                                                |::
- | Otherwise, your masternode will not work, and  |::
- |the Bulwark Team CANNOT assist you in repairing |::
- |        it. You will have to start over.        |::
- |                                                |::
- |Don't use the advanced option unless you are an |::
- |            experienced Linux user.             |::
- |                                                |::
+ |                                                  |
+ | You can choose between two installation options: |::
+ |              default and advanced.               |::
+ |                                                  |::
+ |  The advanced installation will install and run  |::
+ |   the masternode under a non-root user. If you   |::
+ |   don't know what that means, use the default    |::
+ |               installation method.               |::
+ |                                                  |::
+ |  Otherwise, your masternode will not work, and   |::
+ | the Bulwark Team CANNOT assist you in repairing  |::
+ |         it. You will have to start over.         |::
+ |                                                  |::
  +------------------------------------------------+::
    ::::::::::::::::::::::::::::::::::::::::::::::::::
 
