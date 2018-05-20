@@ -102,3 +102,21 @@ Please note that this script must be run as root.
 ```
 bash <( curl https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install/master/update_node.sh )
 ```
+
+## Non-interactive installation
+
+You can use the installer in a non-interactive mode by using command line arguments - for example, if you want to automate the installation. This requires that you download the installer and run it locally. Here are the arguments you can pass to `install.sh`:
+
+```
+-n --normal               : Run installer in normal mode
+-a --advanced             : Run installer in advanced mode
+-i --externalip <address> : Public IP address of VPS
+-k --privatekey <key>     : Private key to use
+-f --fail2ban             : Install Fail2Ban
+--no-fail2ban             : Don't install Fail2Ban
+-u --ufw                  : Install UFW
+--no-ufw                  : Don't install UFW
+-b --bootstrap            : Sync node using Bootstrap
+--no-bootstrap            : Don't use Bootstrap
+-h --help                 : Display this help text.
+```
