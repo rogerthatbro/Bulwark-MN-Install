@@ -164,6 +164,8 @@ USER=bulwark
 
 adduser $USER --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password > /dev/null
 
+INSTALLERUSED="#Used Advanced Install"
+
 echo "" && echo 'Added user "bulwark"' && echo ""
 sleep 1
 
@@ -173,7 +175,7 @@ USER=root
 FAIL2BAN="y"
 UFW="y"
 BOOTSTRAP="y"
-
+INSTALLERUSED="#Used Basic Install"
 fi
 
 USERHOME=`eval echo "~$USER"`
@@ -250,6 +252,7 @@ fi
 # Create bulwark.conf
 touch $USERHOME/.bulwark/bulwark.conf
 cat > $USERHOME/.bulwark/bulwark.conf << EOL
+${INSTALLERUSED}
 rpcuser=${RPCUSER}
 rpcpassword=${RPCPASSWORD}
 rpcallowip=127.0.0.1
