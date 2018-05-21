@@ -290,8 +290,8 @@ StartLimitBurst=3
 [Install]
 WantedBy=multi-user.target
 EOL
-sudo systemctl enable bulwarkd
-sudo systemctl start bulwarkd
+systemctl enable bulwarkd
+systemctl start bulwarkd
 
 clear
 
