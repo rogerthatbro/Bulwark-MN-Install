@@ -43,9 +43,11 @@ sed -i '/^addnode/d' $USERHOME/.bulwark/bulwark.conf
 
 echo "Restarting Bulwark daemon..."
 if [ -e /etc/systemd/system/bulwarkd.service ]; then
-  systemctl start bulwarkd
-else
-  cat > /etc/systemd/system/bulwarkd.service << EOL
+  systemctl disable bulwarkd
+  rm /etc/systemd/system/bulwarkd.service
+fi
+
+cat > /etc/systemd/system/bulwarkd.service << EOL
 [Unit]
 Description=bulwarkd
 After=network.target
@@ -55,13 +57,14 @@ User=${USER}
 WorkingDirectory=${USERHOME}
 ExecStart=/usr/local/bin/bulwarkd -conf=${USERHOME}/.bulwark/bulwark.conf -datadir=${USERHOME}/.bulwark
 ExecStop=/usr/local/bin/bulwark-cli -conf=${USERHOME}/.bulwark/bulwark.conf -datadir=${USERHOME}/.bulwark stop
-Restart=on-abort
+Restart=on-failure
+RestartSec=1m
 [Install]
 WantedBy=multi-user.target
 EOL
-  sudo systemctl enable bulwarkd
-  sudo systemctl start bulwarkd
-fi
+sudo systemctl enable bulwarkd
+sudo systemctl start bulwarkd
+
 clear
 
 echo "Your masternode is syncing. Please wait for this process to finish."

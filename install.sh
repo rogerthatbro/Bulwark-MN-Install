@@ -282,7 +282,8 @@ User=${USER}
 WorkingDirectory=${USERHOME}
 ExecStart=/usr/local/bin/bulwarkd -conf=${USERHOME}/.bulwark/bulwark.conf -datadir=${USERHOME}/.bulwark
 ExecStop=/usr/local/bin/bulwark-cli -conf=${USERHOME}/.bulwark/bulwark.conf -datadir=${USERHOME}/.bulwark stop
-Restart=on-abort
+Restart=on-failure
+RestartSec=1m
 [Install]
 WantedBy=multi-user.target
 EOL
