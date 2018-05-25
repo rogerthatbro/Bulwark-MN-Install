@@ -60,6 +60,7 @@ ExecStop=/usr/local/bin/bulwark-cli -conf=${USERHOME}/.bulwark/bulwark.conf -dat
 Restart=on-failure
 RestartSec=1m
 StartLimitIntervalSec=300
+StartLimitInterval=300
 StartLimitBurst=2
 [Install]
 WantedBy=multi-user.target
