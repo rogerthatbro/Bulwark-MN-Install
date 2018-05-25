@@ -49,7 +49,7 @@ fi
 
 cat > /etc/systemd/system/bulwarkd.service << EOL
 [Unit]
-Description=bulwarkd
+Description=Bulwarks's distributed currency daemon
 After=network.target
 [Service]
 Type=forking

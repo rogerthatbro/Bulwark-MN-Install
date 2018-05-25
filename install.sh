@@ -274,7 +274,7 @@ sleep 1
 
 cat > /etc/systemd/system/bulwarkd.service << EOL
 [Unit]
-Description=bulwarkd
+Description=Bulwarks's distributed currency daemon
 After=network.target
 [Service]
 Type=forking
@@ -284,9 +284,9 @@ ExecStart=/usr/local/bin/bulwarkd -conf=${USERHOME}/.bulwark/bulwark.conf -datad
 ExecStop=/usr/local/bin/bulwark-cli -conf=${USERHOME}/.bulwark/bulwark.conf -datadir=${USERHOME}/.bulwark stop
 Restart=on-failure
 RestartSec=1m
-StartLimitIntervalSec=300
-StartLimitInterval=300
-StartLimitBurst=2
+StartLimitIntervalSec=5m
+StartLimitInterval=5m
+StartLimitBurst=3
 [Install]
 WantedBy=multi-user.target
 EOL
