@@ -218,6 +218,8 @@ apt-get -qq install aptitude
 # Install Fail2Ban
 if [[ ("$FAIL2BAN" == "y" || "$FAIL2BAN" == "Y" || "$FAIL2BAN" == "") ]]; then
   aptitude -y -q install fail2ban
+  # Reduce Fail2Ban memory usage - http://hacksnsnacks.com/snippets/reduce-fail2ban-memory-usage/
+  echo "ulimit -s 256" >> /etc/default/fail2ban
   service fail2ban restart
 fi
 
