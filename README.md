@@ -113,10 +113,13 @@ You can use the installer in a non-interactive mode by using command line argume
 -i --externalip <address> : Public IP address of VPS
 -k --privatekey <key>     : Private key to use
 -f --fail2ban             : Install Fail2Ban
---no-fail2ban             : Don not install Fail2Ban
+--no-fail2ban             : Don't install Fail2Ban
 -u --ufw                  : Install UFW
---no-ufw                  : Do not install UFW
+--no-ufw                  : Don't install UFW
 -b --bootstrap            : Sync node using Bootstrap
---no-bootstrap            : Do not use Bootstrap
+--no-bootstrap            : Don't use Bootstrap
 -h --help                 : Display this help text.
+--no-interaction          : Do not wait for wallet activation.
 ```
+
+If you want to make the installation process fully non-interactive, you need to provide Bulwark with arguments for the mode to use, the external IP, private key, and wether to use fail2ban, UFW and the bootstrap, and then also add the `--no-interaction` parameter. Please not that this will not tell you to activate your masternode from your wallet after the node has finished syncing, so it will not run until you do.

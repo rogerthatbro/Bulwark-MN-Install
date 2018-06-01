@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Make installer interactive by default.
+INTERACTIVE="y"
+
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -52,6 +55,10 @@ case $key in
     BOOTSTRAP="n"
     shift
     ;;
+    --no-interaction)
+    INTERACTIVE="n"
+    shift
+    ;;
     -h|--help)
     cat << EOL
 
@@ -68,6 +75,7 @@ Bulwark Masternode installer arguments:
     -b --bootstrap            : Sync node using Bootstrap
     --no-bootstrap            : Don't use Bootstrap
     -h --help                 : Display this help text.
+    --no-interaction          : Do not wait for wallet activation.
 
 EOL
     exit
@@ -320,7 +328,9 @@ where <mymnalias> is the name of your masternode alias (without brackets)
 
 EOL
 
-read -p "Press Enter to continue after you've done that. " -n1 -s
+if [[ $INTERACTIVE = "y" ]]; then
+  read -p "Press Enter to continue after you've done that. " -n1 -s
+fi
 
 clear
 
