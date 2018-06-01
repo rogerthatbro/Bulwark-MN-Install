@@ -39,7 +39,14 @@ if [ -e /usr/bin/bulwarkd ];then rm -rf /usr/bin/bulwarkd; fi
 if [ -e /usr/bin/bulwark-cli ];then rm -rf /usr/bin/bulwark-cli; fi
 if [ -e /usr/bin/bulwark-tx ];then rm -rf /usr/bin/bulwark-tx; fi
 
+# Remove addnodes from bulwark.conf
 sed -i '/^addnode/d' $USERHOME/.bulwark/bulwark.conf
+
+# Add Fail2Ban memory hack if needed
+if ! grep -q "ulimit -s 256" /etc/default/fail2ban; then
+  echo "ulimit -s 256" >> /etc/default/fail2ban
+  systemctl restart fail2ban
+fi
 
 echo "Restarting Bulwark daemon..."
 if [ -e /etc/systemd/system/bulwarkd.service ]; then
