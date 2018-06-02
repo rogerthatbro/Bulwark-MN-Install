@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Make installer interactive by default.
+# Make installer interactive and select normal mode by default.
 INTERACTIVE="y"
+ADVANCED="n"
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]
