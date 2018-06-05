@@ -66,6 +66,8 @@ SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login as root (**Plea
 bash <( curl https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install/master/install.sh )
 ```
 
+If you get the error "bash: curl: command not found", run this first: `apt-get -y install curl`
+
 When the script asks, confirm your VPS IP Address and paste your masternode key (You can copy your key and paste into the VPS if connected with Putty by right clicking)
 
 The installer will then present you with a few options.
