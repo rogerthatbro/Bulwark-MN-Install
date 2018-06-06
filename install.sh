@@ -94,9 +94,9 @@ clear
 # Set these to change the version of Bulwark to install
 
 
-TARBALLURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.4/bulwark-1.2.4.0-linux64.tar.gz"
-TARBALLNAME="bulwark-1.2.4.0-linux64.tar.gz"
-BWKVERSION="1.2.4.0"
+TARBALLURL="https://github.com/dustinengle/Bulwark/releases/download/bulwark-testnet-1.3.0.0-20180605174817-ff5d9d3/bulwark-testnet-1.3.0.0-x86_64-unknown-linux-gnu.tar.gz"
+TARBALLNAME="bulwark-testnet-1.3.0.0-x86_64-unknown-linux-gnu.tar.gz"
+BWKVERSION="1.3.0.0"
 BOOTSTRAPURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.4/bootstrap.dat.zip"
 BOOTSTRAPARCHIVE="bootstrap.dat.zip"
 
@@ -271,6 +271,12 @@ bind=${EXTERNALIP}:42133
 masternodeaddr=${EXTERNALIP}
 masternodeprivkey=${KEY}
 masternode=1
+testnet=1
+addnode=72.47.2.98:42133
+addnode=8.12.17.40:42133
+addnode=144.202.119.144:42133
+addnode=140.82.44.55:42133
+addnode=51.15.59.201:42133
 EOL
 chmod 0600 $USERHOME/.bulwark/bulwark.conf
 chown -R $USER:$USER $USERHOME/.bulwark
