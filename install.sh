@@ -127,8 +127,7 @@ apt-get install git dnsutils systemd -y > /dev/null 2>&1
 # Check for systemd
 systemctl --version >/dev/null 2>&1 || { echo "systemd is required. Are you using Ubuntu 16.04?"  >&2; exit 1; }
 
-# CHARS is used for the loading animation further down.
-CHARS="/-\|"
+# Get our current IP
 if [ -z "$EXTERNALIP" ]; then
 EXTERNALIP=`dig +short myip.opendns.com @resolver1.opendns.com`
 fi
@@ -302,7 +301,15 @@ StartLimitBurst=3
 WantedBy=multi-user.target
 EOL
 systemctl enable bulwarkd
+echo "Starting bulwarkd, please wait..."
 systemctl start bulwarkd
+
+sleep 10
+
+if ! systemctl status bulwarkd | grep "active (running)"; then
+  echo "ERROR: Failed to start bulwarkd. Please contact support."
+  exit
+fi
 
 clear
 
@@ -310,10 +317,8 @@ echo "Your masternode is syncing. Please wait for this process to finish."
 echo "This can take up to a few hours. Do not close this window." && echo ""
 
 until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do
-  for (( i=0; i<${#CHARS}; i++ )); do
-    sleep 2
-    echo -en "${CHARS:$i:1}" "\r"
-  done
+  echo -ne "Current block: "`bulwark-cli getinfo | grep blocks | awk '{print $3}' | cut -d ','-f 1`'\r'
+  sleep 1
 done
 
 clear
