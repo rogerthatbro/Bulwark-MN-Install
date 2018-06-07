@@ -94,7 +94,7 @@ clear
 # Set these to change the version of Bulwark to install
 
 
-TARBALLURL="https://github.com/dustinengle/Bulwark/releases/download/bulwark-testnet-1.3.0.0-20180605174817-ff5d9d3/bulwark-testnet-1.3.0.0-x86_64-unknown-linux-gnu.tar.gz"
+TARBALLURL="https://github.com/dustinengle/Bulwark/releases/download/bulwark-testnet-1.3.0.0-20180607185627-6ab752f/bulwark-testnet-1.3.0.0-x86_64-unknown-linux-gnu.tar.gz"
 TARBALLNAME="bulwark-testnet-1.3.0.0-x86_64-unknown-linux-gnu.tar.gz"
 BWKVERSION="1.3.0.0"
 BOOTSTRAPURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.4/bootstrap.dat.zip"
