@@ -27,6 +27,11 @@ case $key in
     shift
     shift
     ;;
+    --bindip)
+    BINDIP="$2"
+    shift
+    shift
+    ;;
     -k|--privatekey)
     KEY="$2"
     shift
@@ -68,6 +73,7 @@ Bulwark Masternode installer arguments:
     -n --normal               : Run installer in normal mode
     -a --advanced             : Run installer in advanced mode
     -i --externalip <address> : Public IP address of VPS
+    --bindip <address>        : Internal bind IP to use
     -k --privatekey <key>     : Private key to use
     -f --fail2ban             : Install Fail2Ban
     --no-fail2ban             : Don't install Fail2Ban
@@ -183,23 +189,27 @@ fi
 USERHOME=`eval echo "~$USER"`
 
 if [ -z "$ARGUMENTIP" ]; then
-read -e -p "Server IP Address: " -i $EXTERNALIP -e EXTERNALIP
+  read -e -p "Server IP Address: " -i $EXTERNALIP -e EXTERNALIP
+fi
+
+if [ -z "$BINDIP" ]; then
+    BINDIP=$EXTERNALIP;
 fi
 
 if [ -z "$KEY" ]; then
-read -e -p "Masternode Private Key (e.g. 7edfjLCUzGczZi3JQw8GHp434R9kNY33eFyMGeKRymkB56G4324h # THE KEY YOU GENERATED EARLIER) : " KEY
+  read -e -p "Masternode Private Key (e.g. 7edfjLCUzGczZi3JQw8GHp434R9kNY33eFyMGeKRymkB56G4324h # THE KEY YOU GENERATED EARLIER) : " KEY
 fi
 
 if [ -z "$FAIL2BAN" ]; then
-read -e -p "Install Fail2ban? [Y/n] : " FAIL2BAN
+  read -e -p "Install Fail2ban? [Y/n] : " FAIL2BAN
 fi
 
 if [ -z "$UFW" ]; then
-read -e -p "Install UFW and configure ports? [Y/n] : " UFW
+  read -e -p "Install UFW and configure ports? [Y/n] : " UFW
 fi
 
 if [ -z "$BOOTSTRAP" ]; then
-read -e -p "Do you want to use our bootstrap file to speed the syncing process? [Y/n] : " BOOTSTRAP
+  read -e -p "Do you want to use our bootstrap file to speed the syncing process? [Y/n] : " BOOTSTRAP
 fi
 
 clear
@@ -266,7 +276,7 @@ daemon=1
 logtimestamps=1
 maxconnections=256
 externalip=${EXTERNALIP}
-bind=${EXTERNALIP}:42133
+bind=${BINDIP}:42133
 masternodeaddr=${EXTERNALIP}
 masternodeprivkey=${KEY}
 masternode=1
