@@ -311,7 +311,7 @@ StartLimitBurst=3
 WantedBy=multi-user.target
 EOL
 systemctl enable bulwarkd
-echo "Starting bulwarkd, please wait..."
+echo "Starting bulwarkd..."
 systemctl start bulwarkd
 
 sleep 10
@@ -320,6 +320,11 @@ if ! systemctl status bulwarkd | grep "active (running)"; then
   echo "ERROR: Failed to start bulwarkd. Please contact support."
   exit
 fi
+
+echo "Waiting for wallet to load..."
+until ! bulwark-cli getinfo | grep "error:"; do
+  sleep 1;
+done
 
 clear
 
