@@ -316,13 +316,13 @@ systemctl start bulwarkd
 
 sleep 10
 
-if ! systemctl status bulwarkd | grep "active (running)"; then
+if ! systemctl status bulwarkd | grep -q "active (running)"; then
   echo "ERROR: Failed to start bulwarkd. Please contact support."
   exit
 fi
 
 echo "Waiting for wallet to load..."
-until ! bulwark-cli getinfo | grep "error:"; do
+until bulwark-cli getinfo 2>/dev/null | grep -q "version"; do
   sleep 1;
 done
 
