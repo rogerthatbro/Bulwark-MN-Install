@@ -99,7 +99,6 @@ clear
 
 # Set these to change the version of Bulwark to install
 
-
 TARBALLURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.2.4/bulwark-1.2.4.0-linux64.tar.gz"
 TARBALLNAME="bulwark-1.2.4.0-linux64.tar.gz"
 BWKVERSION="1.2.4.0"
@@ -231,7 +230,7 @@ apt-get -qq install aptitude
 if [[ ("$FAIL2BAN" == "y" || "$FAIL2BAN" == "Y" || "$FAIL2BAN" == "") ]]; then
   aptitude -y -q install fail2ban
   # Reduce Fail2Ban memory usage - http://hacksnsnacks.com/snippets/reduce-fail2ban-memory-usage/
-  echo "ulimit -s 256" >> /etc/default/fail2ban
+  echo "ulimit -s 256" | sudo tee -a /etc/default/fail2ban
   service fail2ban restart
 fi
 

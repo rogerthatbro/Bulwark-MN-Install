@@ -44,7 +44,7 @@ sed -i '/^addnode/d' $USERHOME/.bulwark/bulwark.conf
 
 # Add Fail2Ban memory hack if needed
 if ! grep -q "ulimit -s 256" /etc/default/fail2ban; then
-  echo "ulimit -s 256" >> /etc/default/fail2ban
+  echo "ulimit -s 256" | sudo tee -a /etc/default/fail2ban
   systemctl restart fail2ban
 fi
 
