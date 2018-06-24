@@ -48,7 +48,7 @@ clear
 echo "Your masternode is syncing. Please wait for this process to finish."
 echo "This can take up to a few hours. Do not close this window." && echo ""
 
-until [ -n "$(bulwark-cli getconnectioncount 2>/dev/null)"  ]
+until [ -n "$(bulwark-cli getconnectioncount 2>/dev/null)"  ]; do
   sleep 1
 done
 
