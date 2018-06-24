@@ -1,5 +1,8 @@
 #!/bin/bash
 
+BOOTSTRAPURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.3.0/bootstrap.dat.xz"
+BOOTSTRAPARCHIVE="bootstrap.dat.xz"
+
 clear
 echo "This script will refresh your masternode."
 read -p "Press Ctrl-C to abort or any other key to continue. " -n1 -s
@@ -31,16 +34,21 @@ rm -rf $USERHOME/.bulwark/peers.dat
 cp $USERHOME/.bulwark/bulwark.conf $USERHOME/.bulwark/bulwark.conf.backup
 sed -i '/^addnode/d' $USERHOME/.bulwark/bulwark.conf
 
+echo "Installing bootstrap file..."
+wget $BOOTSTRAPURL && xz -cd $BOOTSTRAPARCHIVE > $USERHOME/.bulwark/bootstrap.dat && rm $BOOTSTRAPARCHIVE
+
 if [ -e /etc/systemd/system/bulwarkd.service ]; then
   sudo systemctl start bulwarkd
 else
   su -c "bulwarkd -daemon" $USER
 fi
 
+clear
+
 echo "Your masternode is syncing. Please wait for this process to finish."
 echo "This can take up to a few hours. Do not close this window." && echo ""
 
-until [  $(bulwark-cli getconnectioncount) -gt 0  ] >/dev/null; do
+until [ "$(bulwark-cli getconnectioncount)" -eq "$(bulwark-cli getconnectioncount)" -a "$(bulwark-cli getconnectioncount)" -gt 0  ] 2>/dev/null; do
   sleep 1
 done
 
