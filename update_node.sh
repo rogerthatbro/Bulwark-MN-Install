@@ -1,10 +1,12 @@
 #!/bin/bash
 
-TARBALLURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.3.0/bulwark-1.3.0.0-linux64.tar.gz"
-TARBALLNAME="bulwark-1.3.0.0-linux64.tar.gz"
-BWKVERSION="1.3.0.0"
+# Make sure curl is installed
+sudo apt -qqy install curl
+clear
 
-CHARS="/-\|"
+TARBALLURL=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4`
+TARBALLNAME=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 9`
+BWKVERSION=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 8`
 
 clear
 echo "This script will update your masternode to version $BWKVERSION"
@@ -75,15 +77,29 @@ EOL
 sudo systemctl enable bulwarkd
 sudo systemctl start bulwarkd
 
+sleep 10
+
+clear
+
+if ! systemctl status bulwarkd | grep -q "active (running)"; then
+  echo "ERROR: Failed to start bulwarkd. Please contact support."
+  exit
+fi
+
+echo "Waiting for wallet to load..."
+until bulwark-cli getinfo 2>/dev/null | grep -q "version"; do
+  sleep 1;
+done
+
 clear
 
 echo "Your masternode is syncing. Please wait for this process to finish."
+echo "This can take up to a few hours. Do not close this window."
+echo ""
 
 until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do
-  for (( i=0; i<${#CHARS}; i++ )); do
-    sleep 2
-    echo -en "${CHARS:$i:1}" "\r"
-  done
+  echo -ne "Current block: "`su -c "bulwark-cli getinfo" $USER | grep blocks | awk '{print $3}' | cut -d ',' -f 1`'\r'
+  sleep 1
 done
 
 clear

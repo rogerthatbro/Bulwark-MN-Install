@@ -1,6 +1,10 @@
 #!/bin/bash
 
-BOOTSTRAPURL="https://github.com/bulwark-crypto/Bulwark/releases/download/1.3.0/bootstrap.dat.xz"
+# Make sure curl is installed
+sudo apt -qqy install curl
+clear
+
+BOOTSTRAPURL=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep bootstrap.dat.xz | grep browser_download_url | cut -d '"' -f 4`
 BOOTSTRAPARCHIVE="bootstrap.dat.xz"
 
 clear
@@ -19,7 +23,7 @@ USERHOME=`eval echo "~$USER"`
 if [ -e /etc/systemd/system/bulwarkd.service ]; then
   systemctl stop bulwarkd
 else
-  su -c "bulwark-cli stop" $BWKUSER
+  su -c "bulwark-cli stop" $USER
 fi
 
 echo "Refreshing node, please wait."
@@ -43,10 +47,25 @@ else
   su -c "bulwarkd -daemon" $USER
 fi
 
+sleep 10
+
+clear
+
+if ! systemctl status bulwarkd | grep -q "active (running)"; then
+  echo "ERROR: Failed to start bulwarkd. Please contact support."
+  exit
+fi
+
+echo "Waiting for wallet to load..."
+until bulwark-cli getinfo 2>/dev/null | grep -q "version"; do
+  sleep 1;
+done
+
 clear
 
 echo "Your masternode is syncing. Please wait for this process to finish."
-echo "This can take up to a few hours. Do not close this window." && echo ""
+echo "This can take up to a few hours. Do not close this window."
+echo ""
 
 until [ -n "$(bulwark-cli getconnectioncount 2>/dev/null)"  ]; do
   sleep 1
