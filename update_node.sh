@@ -4,8 +4,6 @@ TARBALLURL=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases
 TARBALLNAME=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 9`
 BWKVERSION=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 8`
 
-CHARS="/-\|"
-
 clear
 echo "This script will update your masternode to version $BWKVERSION"
 read -p "Press Ctrl-C to abort or any other key to continue. " -n1 -s
