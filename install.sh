@@ -388,7 +388,7 @@ if ! systemctl status bulwarkd | grep -q "active (running)"; then
 fi
 
 echo "Waiting for wallet to load..."
-until bulwark-cli getinfo 2>/dev/null | grep -q "version"; do
+until su -c "bulwark-cli getinfo 2>/dev/null | grep -q \"version\"" $USER; do
   sleep 1;
 done
 
