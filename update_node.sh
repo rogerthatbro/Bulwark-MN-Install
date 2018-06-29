@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Make sure curl is installed
-sudo apt -qqy install curl
+apt-get -qq update
+apt -qqy install curl
 clear
 
 TARBALLURL=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4`
