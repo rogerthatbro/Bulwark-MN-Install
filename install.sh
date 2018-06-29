@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Make sure curl is installed
+sudo apt -qqy install curl
+clear
+
 # Make installer interactive and select normal mode by default.
 INTERACTIVE="y"
 ADVANCED="n"
