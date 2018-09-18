@@ -346,7 +346,7 @@ EOL
     echo -ne "Connecting... - \\r"
     sleep 1
   done
-  I2PB32KEY=$(cat /home/kovri/.kovri/client/keys/bulwarkd.dat.b32.txt)
+  I2PB32KEY=$(cat "$USERHOME/.kovri/client/keys/bulwarkd.dat.b32.txt")
 fi
 
 # Install Bulwark daemon
