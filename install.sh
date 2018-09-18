@@ -3,6 +3,7 @@
 # Make installer interactive and select normal mode by default.
 INTERACTIVE="y"
 ADVANCED="n"
+I2PREADY="n"
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]
@@ -128,6 +129,11 @@ if [[ $(free -m | awk '/^Mem:/{print $2}') -lt 850 ]]; then
   exit 1
 fi
 
+# Check if I2P is an option
+if [[ $(free -m | awk '/^Mem:/{print $2}') -gt 1700 ]]; then
+  I2PREADY="y"
+fi
+
 # Check if we have enough disk space
 if [[ $(df -k --output=avail / | tail -n1) -lt 10485760 ]]; then
   echo "This installation requires at least 10GB of free disk space.";
@@ -222,6 +228,10 @@ fi
 
 if [ -z "$TOR" ]; then
   read -epr "Would you like to use bulwarkd via TOR? [y/N] : " TOR
+fi
+
+if [[ "$I2PREADY" == "y" && "$TOR" != "Y" && "$TOR" != "y" ]]; then
+  read -epr "Would you like to use bulwarkd via I2P? [y/N] : " I2P
 fi
 
 clear
