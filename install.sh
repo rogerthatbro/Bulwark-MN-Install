@@ -108,10 +108,10 @@ clear
 
 # These should automatically find the latest version of Bulwark
 
-TARBALLURL=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4`
-TARBALLNAME=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 9`
-BWKVERSION=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 8`
-BOOTSTRAPURL=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep bootstrap.dat.xz | grep browser_download_url | cut -d '"' -f 4`
+TARBALLURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4)
+TARBALLNAME=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 9)
+BWKVERSION=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 8)
+BOOTSTRAPURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep bootstrap.dat.xz | grep browser_download_url | cut -d '"' -f 4)
 BOOTSTRAPARCHIVE="bootstrap.dat.xz"
 
 #!/bin/bash
@@ -123,13 +123,13 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Check if we have enough memory
-if [[ `free -m | awk '/^Mem:/{print $2}'` -lt 850 ]]; then
+if [[ $(free -m | awk '/^Mem:/{print $2}') -lt 850 ]]; then
   echo "This installation requires at least 1GB of RAM.";
   exit 1
 fi
 
 # Check if we have enough disk space
-if [[ `df -k --output=avail / | tail -n1` -lt 10485760 ]]; then
+if [[ $(df -k --output=avail / | tail -n1) -lt 10485760 ]]; then
   echo "This installation requires at least 10GB of free disk space.";
   exit 1
 fi
@@ -143,7 +143,7 @@ systemctl --version >/dev/null 2>&1 || { echo "systemd is required. Are you usin
 
 # Get our current IP
 if [ -z "$EXTERNALIP" ]; then
-EXTERNALIP=`dig +short myip.opendns.com @resolver1.opendns.com`
+EXTERNALIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 fi
 clear
 
@@ -152,10 +152,10 @@ echo "
     ___T_
    | o o |
    |__-__|
-   /| []|\\
- ()/|___|\()
+   /| []|\\\\
+ ()/|___|\\()
     |_|_|
-    /_|_\  ------- MASTERNODE INSTALLER v3 -------+
+    /_|_\\  ------- MASTERNODE INSTALLER v3 -------+
  |                                                  |
  |   Welcome to the Bulwark Masternode Installer!   |::
  |                                                  |::
@@ -194,10 +194,10 @@ fi
 INSTALLERUSED="#Used Basic Install"
 fi
 
-USERHOME=`eval echo "~$USER"`
+USERHOME=$(eval echo "~$USER")
 
 if [ -z "$ARGUMENTIP" ]; then
-  read -e -p "Server IP Address: " -i $EXTERNALIP -e EXTERNALIP
+  read -epr "Server IP Address: " -i "$EXTERNALIP" -e EXTERNALIP
 fi
 
 if [ -z "$BINDIP" ]; then
@@ -205,30 +205,30 @@ if [ -z "$BINDIP" ]; then
 fi
 
 if [ -z "$KEY" ]; then
-  read -e -p "Masternode Private Key (e.g. 7edfjLCUzGczZi3JQw8GHp434R9kNY33eFyMGeKRymkB56G4324h # THE KEY YOU GENERATED EARLIER) : " KEY
+  read -epr "Masternode Private Key (e.g. 7edfjLCUzGczZi3JQw8GHp434R9kNY33eFyMGeKRymkB56G4324h # THE KEY YOU GENERATED EARLIER) : " KEY
 fi
 
 if [ -z "$FAIL2BAN" ]; then
-  read -e -p "Install Fail2ban? [Y/n] : " FAIL2BAN
+  read -epr "Install Fail2ban? [Y/n] : " FAIL2BAN
 fi
 
 if [ -z "$UFW" ]; then
-  read -e -p "Install UFW and configure ports? [Y/n] : " UFW
+  read -epr "Install UFW and configure ports? [Y/n] : " UFW
 fi
 
 if [ -z "$BOOTSTRAP" ]; then
-  read -e -p "Do you want to use our bootstrap file to speed the syncing process? [Y/n] : " BOOTSTRAP
+  read -epr "Do you want to use our bootstrap file to speed the syncing process? [Y/n] : " BOOTSTRAP
 fi
 
 if [ -z "$TOR" ]; then
-  read -e -p "Would you like to use bulwarkd via TOR? [y/N] : " TOR
+  read -epr "Would you like to use bulwarkd via TOR? [y/N] : " TOR
 fi
 
 clear
 
 # Generate random passwords
-RPCUSER=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
-RPCPASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+RPCUSER=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
+RPCPASSWORD=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 # update packages and upgrade Ubuntu
 echo "Installing dependencies..."
@@ -288,35 +288,35 @@ EOL
 fi
 
 # Install Bulwark daemon
-wget $TARBALLURL
-tar -xzvf $TARBALLNAME && mv bin bulwark-$BWKVERSION
-rm $TARBALLNAME
-cp ./bulwark-$BWKVERSION/bulwarkd /usr/local/bin
-cp ./bulwark-$BWKVERSION/bulwark-cli /usr/local/bin
-cp ./bulwark-$BWKVERSION/bulwark-tx /usr/local/bin
-rm -rf bulwark-$BWKVERSION
+wget "$TARBALLURL"
+tar -xzvf "$TARBALLNAME" && mv bin "bulwark-$BWKVERSION"
+rm "$TARBALLNAME"
+cp "./bulwark-$BWKVERSION/bulwarkd" /usr/local/bin
+cp "./bulwark-$BWKVERSION/bulwark-cli" /usr/local/bin
+cp "./bulwark-$BWKVERSION/bulwark-tx" /usr/local/bin
+rm -rf "bulwark-$BWKVERSION"
 
 # Create .bulwark directory
-mkdir $USERHOME/.bulwark
+mkdir "$USERHOME/.bulwark"
 
 # Install bootstrap file
 if [[ ("$BOOTSTRAP" == "y" || "$BOOTSTRAP" == "Y" || "$BOOTSTRAP" == "") ]]; then
   echo "Installing bootstrap file..."
-  wget $BOOTSTRAPURL && xz -cd $BOOTSTRAPARCHIVE > $USERHOME/.bulwark/bootstrap.dat && rm $BOOTSTRAPARCHIVE
+  wget "$BOOTSTRAPURL" && xz -cd $BOOTSTRAPARCHIVE > "$USERHOME/.bulwark/bootstrap.dat" && rm $BOOTSTRAPARCHIVE
 fi
 
 # Create bulwark.conf
-touch $USERHOME/.bulwark/bulwark.conf
+touch "$USERHOME/.bulwark/bulwark.conf"
 
 # Set TORHOSTNAME if it exists.
 if [[ -f /var/lib/tor/hidden_service/hostname ]]; then
-  TORHOSTNAME=`cat /var/lib/tor/hidden_service/hostname`
+  TORHOSTNAME=$(cat /var/lib/tor/hidden_service/hostname)
 fi
 
 # We need a different conf for TOR support
 if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
 
-cat > $USERHOME/.bulwark/bulwark.conf << EOL
+cat > "$USERHOME/.bulwark/bulwark.conf" << EOL
 rpcuser=${RPCUSER}
 rpcpassword=${RPCPASSWORD}
 rpcallowip=127.0.0.1
@@ -336,7 +336,7 @@ EOL
 
 else
 
-cat > $USERHOME/.bulwark/bulwark.conf << EOL
+cat > "$USERHOME/.bulwark/bulwark.conf" << EOL
 ${INSTALLERUSED}
 rpcuser=${RPCUSER}
 rpcpassword=${RPCPASSWORD}
@@ -353,8 +353,8 @@ masternodeprivkey=${KEY}
 masternode=1
 EOL
 fi
-chmod 0600 $USERHOME/.bulwark/bulwark.conf
-chown -R $USER:$USER $USERHOME/.bulwark
+chmod 0600 "$USERHOME/.bulwark/bulwark.conf"
+chown -R $USER:$USER "$USERHOME/.bulwark"
 
 sleep 1
 
@@ -402,7 +402,7 @@ fi
 echo ""
 
 until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do
-  echo -ne "Current block: "`su -c "bulwark-cli getinfo" $USER | grep blocks | awk '{print $3}' | cut -d ',' -f 1`'\r'
+  echo -ne "Current block: $(su -c "bulwark-cli getinfo" $USER | grep blocks | awk '{print $3}' | cut -d ',' -f 1)\\r"
   sleep 1
 done
 
@@ -418,7 +418,7 @@ EOL
 
 
 if [[ $INTERACTIVE = "y" ]]; then
-  read -p "Press Enter to continue after you've done that. " -n1 -s
+  read -pr "Press Enter to continue after you've done that. " -n1 -s
 fi
 
 clear
