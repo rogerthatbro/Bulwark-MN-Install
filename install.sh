@@ -114,6 +114,10 @@ TARBALLNAME=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releas
 BWKVERSION=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 8)
 BOOTSTRAPURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep bootstrap.dat.xz | grep browser_download_url | cut -d '"' -f 4)
 BOOTSTRAPARCHIVE="bootstrap.dat.xz"
+I2PBINURL="https://github.com/kewagi/kovri/releases/download/v0.1.0-alpha/kovri-0.1.0-alpha.tar.gz"
+I2PBINARCHIVE="kovri-0.1.0-alpha.tar.gz"
+I2PCONFURL="https://github.com/kewagi/kovri/releases/download/v0.1.0-alpha/kovri-conf.tar.gz"
+I2PCONFARCHIVE="kovri-conf.tar.gz"
 
 #!/bin/bash
 
@@ -236,6 +240,11 @@ fi
 
 clear
 
+if [[ ("$TOR" == "y" || "$TOR" == "Y") && ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+  echo "Can't use both TOR and I2P. Exiting."
+  exit 1
+fi
+
 # Generate random passwords
 RPCUSER=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
 RPCPASSWORD=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
@@ -297,6 +306,43 @@ EOL
   sleep 5 # Give tor enough time to connect before we continue
 fi
 
+# Install I2P
+if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+  echo "Installing I2P..."
+  apt-get -qq install libboost-all-dev libssl-dev doxygen graphviz # removed: git gcc clang cmake
+  wget $I2PBINURL && tar xzf $I2PBINARCHIVE && rm $I2PBINARCHIVE
+  mv kovri-bin/* /usr/local/bin && rm kovri-bin
+  chown $USER:$USER /usr/local/bin/kovri* && chmod ug+x /usr/local/bin/kovri*
+  mkdir "$USERHOME/.kovri"
+  wget $I2PCONFURL && tar xzf $I2PCONFARCHIVE -C "$USERHOME/.kovri/" && rm $I2PCONFARCHIVE
+  chown -R $USER:$USER "$USERHOME/.kovri"
+  cat > /etc/systemd/system/kovri.service << EOL
+[Unit]
+Description=Kovri I2P
+After=network.target
+[Service]
+Type=simple
+User=${USER}
+WorkingDirectory=${USERHOME}
+ExecStart=/usr/local/bin/kovri
+Restart=on-failure
+RestartSec=1m
+StartLimitIntervalSec=5m
+StartLimitInterval=5m
+StartLimitBurst=3
+[Install]
+WantedBy=multi-user.target
+EOL
+  systemctl enable kovri
+  systemctl start kovri
+  echo "Waiting for kovri to finish connecting, this can take a few minutes."
+  until curl -x http://localhost:4446 http://check.kovri.i2p --fail &>/dev/null; do
+    echo -ne "Connecting...\\r"
+    sleep 5
+  done
+  I2PB32KEY=$(cat /home/kovri/.kovri/client/keys/bulwarkd.dat.b32.txt)
+fi
+
 # Install Bulwark daemon
 wget "$TARBALLURL"
 tar -xzvf "$TARBALLNAME" && mv bin "bulwark-$BWKVERSION"
@@ -323,44 +369,63 @@ if [[ -f /var/lib/tor/hidden_service/hostname ]]; then
   TORHOSTNAME=$(cat /var/lib/tor/hidden_service/hostname)
 fi
 
-# We need a different conf for TOR support
 if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
 
 cat > "$USERHOME/.bulwark/bulwark.conf" << EOL
-rpcuser=${RPCUSER}
-rpcpassword=${RPCPASSWORD}
-rpcallowip=127.0.0.1
-listen=1
-server=1
+${INSTALLERUSED}
+bind=127.0.0.1
 daemon=1
+dnsseed=0
+externalip=${TORHOSTNAME}
+listen=1
 logtimestamps=1
+masternode=1
+masternodeprivkey=${KEY}
 maxconnections=256
 onion=127.0.0.1:9050
 onlynet=tor
-bind=127.0.0.1
-dnsseed=0
-masternodeprivkey=${KEY}
-masternode=1
-externalip=${TORHOSTNAME}
+rpcallowip=127.0.0.1
+rpcpassword=${RPCPASSWORD}
+rpcuser=${RPCUSER}
+server=1
 EOL
 
+elif [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+cat > "$USERHOME/.bulwark/bulwark.conf" << EOL
+${INSTALLERUSED}
+addnode=czra3immvcuuex3uxew2mh6einh7isxvpi6vinamcltlthj3xcuq.b32.i2p
+bind=127.0.0.1
+daemon=1
+dnsseed=0
+listen=1
+logtimestamps=1
+masternode=1
+masternodeaddr=${I2PB32KEY}:52543
+masternodeprivkey=${KEY}
+maxconnections=256
+proxy=127.0.0.1:4447
+rpcallowip=127.0.0.1
+rpcpassword=${RPCPASSWORD}
+rpcuser=${RPCUSER}
+server=1
+EOL
 else
 
 cat > "$USERHOME/.bulwark/bulwark.conf" << EOL
 ${INSTALLERUSED}
-rpcuser=${RPCUSER}
-rpcpassword=${RPCPASSWORD}
-rpcallowip=127.0.0.1
-listen=1
-server=1
-daemon=1
-logtimestamps=1
-maxconnections=256
-externalip=${EXTERNALIP}
 bind=${BINDIP}:52543
+daemon=1
+externalip=${EXTERNALIP}
+listen=1
+logtimestamps=1
+masternode=1
 masternodeaddr=${EXTERNALIP}
 masternodeprivkey=${KEY}
-masternode=1
+maxconnections=256
+rpcallowip=127.0.0.1
+rpcpassword=${RPCPASSWORD}
+rpcuser=${RPCUSER}
+server=1
 EOL
 fi
 chmod 0600 "$USERHOME/.bulwark/bulwark.conf"
@@ -406,9 +471,14 @@ clear
 
 echo "Your masternode is syncing. Please wait for this process to finish."
 echo "This can take up to a few hours. Do not close this window."
-if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
+if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then 
   echo "The TOR address of your masternode is: $TORHOSTNAME"
 fi
+
+if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+  echo "The I2P address of your masternode is: $I2PB32KEY"
+fi
+
 echo ""
 
 until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do
@@ -440,4 +510,13 @@ clear
 su -c "/usr/local/bin/bulwark-cli masternode status" $USER
 sleep 5
 
-echo "" && echo "Masternode setup completed." && echo ""
+echo "" && echo "Masternode setup completed." 
+if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then 
+  echo "The TOR address of your masternode is: $TORHOSTNAME"
+fi
+
+if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+  echo "The I2P address of your masternode is: $I2PB32KEY"
+fi
+
+echo ""
