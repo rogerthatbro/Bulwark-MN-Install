@@ -337,8 +337,14 @@ EOL
   systemctl start kovri
   echo "Waiting for kovri to finish connecting, this can take a few minutes."
   until curl -x http://localhost:4446 http://check.kovri.i2p --fail &>/dev/null; do
-    echo -ne "Connecting...\\r"
-    sleep 5
+    echo -ne "Connecting \\ \\r"
+    sleep 1
+    echo -ne "Connecting | \\r"
+    sleep 1
+    echo -ne "Connecting / \\r"
+    sleep 1
+    echo -ne "Connecting - \\r"
+    sleep 1
   done
   I2PB32KEY=$(cat /home/kovri/.kovri/client/keys/bulwarkd.dat.b32.txt)
 fi
