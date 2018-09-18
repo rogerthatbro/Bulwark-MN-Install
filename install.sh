@@ -207,7 +207,7 @@ fi
 USERHOME=$(eval echo "~$USER")
 
 if [ -z "$ARGUMENTIP" ]; then
-  read -epr "Server IP Address: " -i "$EXTERNALIP" -e EXTERNALIP
+  read -erp "Server IP Address: " -i "$EXTERNALIP" -e EXTERNALIP
 fi
 
 if [ -z "$BINDIP" ]; then
@@ -215,27 +215,27 @@ if [ -z "$BINDIP" ]; then
 fi
 
 if [ -z "$KEY" ]; then
-  read -epr "Masternode Private Key (e.g. 7edfjLCUzGczZi3JQw8GHp434R9kNY33eFyMGeKRymkB56G4324h # THE KEY YOU GENERATED EARLIER) : " KEY
+  read -erp "Masternode Private Key (e.g. 7edfjLCUzGczZi3JQw8GHp434R9kNY33eFyMGeKRymkB56G4324h # THE KEY YOU GENERATED EARLIER) : " KEY
 fi
 
 if [ -z "$FAIL2BAN" ]; then
-  read -epr "Install Fail2ban? [Y/n] : " FAIL2BAN
+  read -erp "Install Fail2ban? [Y/n] : " FAIL2BAN
 fi
 
 if [ -z "$UFW" ]; then
-  read -epr "Install UFW and configure ports? [Y/n] : " UFW
+  read -erp "Install UFW and configure ports? [Y/n] : " UFW
 fi
 
 if [ -z "$BOOTSTRAP" ]; then
-  read -epr "Do you want to use our bootstrap file to speed the syncing process? [Y/n] : " BOOTSTRAP
+  read -erp "Do you want to use our bootstrap file to speed the syncing process? [Y/n] : " BOOTSTRAP
 fi
 
 if [ -z "$TOR" ]; then
-  read -epr "Would you like to use bulwarkd via TOR? [y/N] : " TOR
+  read -erp "Would you like to use bulwarkd via TOR? [y/N] : " TOR
 fi
 
 if [[ "$I2PREADY" == "y" && "$TOR" != "Y" && "$TOR" != "y" ]]; then
-  read -epr "Would you like to use bulwarkd via I2P? [y/N] : " I2P
+  read -erp "Would you like to use bulwarkd via I2P? [y/N] : " I2P
 fi
 
 clear
@@ -337,13 +337,13 @@ EOL
   systemctl start kovri
   echo "Waiting for kovri to finish connecting, this can take a few minutes."
   until curl -x http://localhost:4446 http://check.kovri.i2p --fail &>/dev/null; do
-    echo -ne "Connecting \\ \\r"
+    echo -ne "Connecting... \\ \\r"
     sleep 1
-    echo -ne "Connecting | \\r"
+    echo -ne "Connecting... | \\r"
     sleep 1
-    echo -ne "Connecting / \\r"
+    echo -ne "Connecting... / \\r"
     sleep 1
-    echo -ne "Connecting - \\r"
+    echo -ne "Connecting... - \\r"
     sleep 1
   done
   I2PB32KEY=$(cat /home/kovri/.kovri/client/keys/bulwarkd.dat.b32.txt)
@@ -504,7 +504,7 @@ EOL
 
 
 if [[ $INTERACTIVE = "y" ]]; then
-  read -pr "Press Enter to continue after you've done that. " -n1 -s
+  read -rp "Press Enter to continue after you've done that. " -n1 -s
 fi
 
 clear
