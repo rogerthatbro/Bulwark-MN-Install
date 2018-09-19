@@ -26,7 +26,7 @@ Generate your Masternode Private Key
 
 In your wallet, open Tools -> Debug console and run the following command to get your masternode key:
 
-```bash
+```text
 masternode genkey
 ```
 
@@ -34,7 +34,7 @@ Please note: If you plan to set up more than one masternode, you need to create 
 
 Run this command to get your output information:
 
-```bash
+```text
 masternode outputs
 ```
 
@@ -48,7 +48,7 @@ Close your wallet and open the Bulwark Appdata folder. Its location depends on y
 
 In your appdata folder, open masternode.conf with a text editor and add a new line in this format to the bottom of the file:
 
-```bash
+```text
 masternodename ipaddress:52543 genkey collateralTxID outputID
 ```
 
@@ -64,7 +64,7 @@ Restart and unlock your wallet.
 
 SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login as root (**Please note:** It's normal that you don't see your password after typing or pasting it) and run the following command:
 
-```bash
+```text
 bash <( curl https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install/master/install.sh )
 ```
 
@@ -92,7 +92,7 @@ Once you see "Masternode setup completed." on screen, you are done.
 If your masternode is stuck on a block or behaving badly, you can refresh it.
 Please note that this script must be run as root.
 
-```bash
+```text
 bash <( curl https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install/master/refresh_node.sh )
 ```
 
@@ -103,7 +103,7 @@ No other attention is required.
 To update your node please run this command and follow the instructions.
 Please note that this script must be run as root.
 
-```bash
+```text
 bash <( curl https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install/master/update_node.sh )
 ```
 
@@ -111,7 +111,7 @@ bash <( curl https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install
 
 You can use the installer in a non-interactive mode by using command line arguments - for example, if you want to automate the installation. This requires that you download the installer and run it locally. Here are the arguments you can pass to `install.sh`:
 
-```bash
+```text
     -n --normal               : Run installer in normal mode
     -a --advanced             : Run installer in advanced mode
     -i --externalip <address> : Public IP address of VPS
@@ -120,7 +120,7 @@ You can use the installer in a non-interactive mode by using command line argume
     -f --fail2ban             : Install Fail2Ban
     --no-fail2ban             : Don not install Fail2Ban
     -u --ufw                  : Install UFW
-    --no-ufw                  : Don't install UFW
+    --no-ufw                  : Do not install UFW
     -b --bootstrap            : Sync node using Bootstrap
     --no-bootstrap            : Do not use Bootstrap
     -h --help                 : Display this help text.
