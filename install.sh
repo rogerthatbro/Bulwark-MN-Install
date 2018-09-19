@@ -104,7 +104,8 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 clear
 
 # Make sure curl is installed
-apt -qqy install curl
+apt-get update
+apt-get install -qqy curl
 clear
 
 # These should automatically find the latest version of Bulwark
@@ -234,9 +235,11 @@ if [ -z "$TOR" ]; then
   read -erp "Would you like to use bulwarkd via TOR? [y/N] : " TOR
 fi
 
-if [[ "$I2PREADY" == "y" && "$TOR" != "Y" && "$TOR" != "y" ]]; then
+if [[ "$I2PREADY" == "y" && "$TOR" != "Y" && "$TOR" != "y" ]]; then # TODO: Check if I2P is not currently set
   read -erp "Would you like to use bulwarkd via I2P? [y/N] : " I2P
 fi
+
+# TODO: IF I2P is true and I2Pready is not, fail
 
 clear
 
@@ -406,7 +409,6 @@ dnsseed=0
 listen=1
 logtimestamps=1
 masternode=1
-masternodeaddr=${I2PB32KEY}:52543
 masternodeprivkey=${KEY}
 maxconnections=256
 proxy=127.0.0.1:4447
