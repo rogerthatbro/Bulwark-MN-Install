@@ -70,6 +70,10 @@ case $key in
     TOR="y"
     shift
     ;;
+     --i2p)
+    I2P="y"
+    shift
+    ;;
     -h|--help)
     cat << EOL
 
@@ -89,6 +93,7 @@ Bulwark Masternode installer arguments:
     -h --help                 : Display this help text.
     --no-interaction          : Do not wait for wallet activation.
     --tor                     : Install TOR and configure bulwarkd to use it
+    --i2p                     : Install I2P (Requires 2GB of RAM)
 
 EOL
     exit
@@ -239,9 +244,12 @@ if [[ "$I2PREADY" == "y" && "$TOR" != "Y" && "$TOR" != "y" ]]; then # TODO: Chec
   read -erp "Would you like to use bulwarkd via I2P? [y/N] : " I2P
 fi
 
-# TODO: IF I2P is true and I2Pready is not, fail
-
 clear
+
+if [[ ($I2P = "y" || $I2P = "Y") && $I2PREADY != "y" ]];then 
+  echo "Can't install with I2P, not enough RAM. Exiting."
+  exit 1
+fi
 
 if [[ ("$TOR" == "y" || "$TOR" == "Y") && ("$I2P" == "y" || "$I2P" == "Y") ]]; then
   echo "Can't use both TOR and I2P. Exiting."
