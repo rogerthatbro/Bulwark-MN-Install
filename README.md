@@ -131,6 +131,6 @@ You can use the installer in a non-interactive mode by using command line argume
 
 If you want to make the installation process fully non-interactive, you need to provide Bulwark with arguments for the mode to use, the external IP, private key, and wether to use fail2ban, UFW and the bootstrap, and then also add the `--no-interaction` parameter. Please not that this will not tell you to activate your masternode from your wallet after the node has finished syncing, so it will not run until you do.
 
-## Installing a masternode with TOR
+## Installing a masternode with TOR or I2P
 
-During installation, the script will ask you if you want to run your masternode on the TOR network. If you say "Y" to this, you need to change the IP address in your masternode conf from the IP address of your VPS server to its TOR hostname. This hostname will be shown to you during the syincing progress. Everything else works just the same as during a normal installation.
+During installation, the script will ask you if you want to run your masternode on the TOR or I2P network. If you say "Y" to this, you need to change the IP address in your masternode conf from the IP address of your VPS server to its TOR/I2P hostname. This hostname will be shown to you during the syincing progress. Everything else works just the same as during a normal installation.
