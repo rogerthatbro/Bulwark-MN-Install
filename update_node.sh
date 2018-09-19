@@ -5,13 +5,13 @@ apt-get -qq update
 apt -qqy install curl
 clear
 
-TARBALLURL=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4`
-TARBALLNAME=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 9`
-BWKVERSION=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 8`
+TARBALLURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4)
+TARBALLNAME=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 9)
+BWKVERSION=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 8)
 
 clear
 echo "This script will update your masternode to version $BWKVERSION"
-read -p "Press Ctrl-C to abort or any other key to continue. " -n1 -s
+read -rp "Press Ctrl-C to abort or any other key to continue. " -n1 -s
 clear
 
 if [ "$(id -u)" != "0" ]; then
@@ -19,22 +19,23 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
-USER=`ps u $(pgrep bulwarkd) | grep bulwarkd | cut -d " " -f 1`
-USERHOME=`eval echo "~$USER"`
+USER=$(ps -o user= -p "$(pgrep bulwarkd)")
+USERHOME=$(eval echo "~$USER")
 
 echo "Shutting down masternode..."
 if [ -e /etc/systemd/system/bulwarkd.service ]; then
   systemctl stop bulwarkd
 else
-  su -c "bulwark-cli stop" $USER
+  su -c "bulwark-cli stop" "$USER"
 fi
 
 echo "Installing Bulwark $BWKVERSION..."
-mkdir ./bulwark-temp && cd ./bulwark-temp
-wget $TARBALLURL
-tar -xzvf $TARBALLNAME && mv bin bulwark-$BWKVERSION
-yes | cp -rf ./bulwark-$BWKVERSION/bulwarkd /usr/local/bin
-yes | cp -rf ./bulwark-$BWKVERSION/bulwark-cli /usr/local/bin
+mkdir ./bulwark-temp
+cd ./bulwark-temp || exit 1
+wget "$TARBALLURL"
+tar -xzvf "$TARBALLNAME" && mv bin "bulwark-$BWKVERSION"
+cp -rf "./bulwark-$BWKVERSION/bulwarkd" /usr/local/bin
+cp -rf "./bulwark-$BWKVERSION/bulwark-cli" /usr/local/bin
 cd ..
 rm -rf ./bulwark-temp
 
@@ -43,7 +44,7 @@ if [ -e /usr/bin/bulwark-cli ];then rm -rf /usr/bin/bulwark-cli; fi
 if [ -e /usr/bin/bulwark-tx ];then rm -rf /usr/bin/bulwark-tx; fi
 
 # Remove addnodes from bulwark.conf
-sed -i '/^addnode/d' $USERHOME/.bulwark/bulwark.conf
+sed -i '/^addnode/d' "$USERHOME/.bulwark/bulwark.conf"
 
 # Add Fail2Ban memory hack if needed
 if ! grep -q "ulimit -s 256" /etc/default/fail2ban; then
@@ -88,7 +89,7 @@ if ! systemctl status bulwarkd | grep -q "active (running)"; then
 fi
 
 echo "Waiting for wallet to load..."
-until su -c "bulwark-cli getinfo 2>/dev/null | grep -q \"version\"" $USER; do
+until su -c "bulwark-cli getinfo 2>/dev/null | grep -q \"version\"" "$USER"; do
   sleep 1;
 done
 
@@ -98,8 +99,8 @@ echo "Your masternode is syncing. Please wait for this process to finish."
 echo "This can take up to a few hours. Do not close this window."
 echo ""
 
-until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do
-  echo -ne "Current block: "`su -c "bulwark-cli getinfo" $USER | grep blocks | awk '{print $3}' | cut -d ',' -f 1`'\r'
+until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" "$USER"; do 
+  echo -ne "Current block: $(su -c "bulwark-cli getblockcount" "$USER")\\r"
   sleep 1
 done
 
@@ -113,11 +114,11 @@ the Masternodes tab, select your new node and click "Start Alias."
 
 EOL
 
-read -p "Press Enter to continue after you've done that. " -n1 -s
+read -rp "Press Enter to continue after you've done that. " -n1 -s
 
 clear
 
-su -c "bulwark-cli masternode status" $USER
+su -c "bulwark-cli masternode status" "$USER"
 
 cat << EOL
 
