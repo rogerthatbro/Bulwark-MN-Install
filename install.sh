@@ -166,7 +166,7 @@ echo "
    /| []|\\\\
  ()/|___|\\()
     |_|_|
-    /_|_\\  ------- MASTERNODE INSTALLER v3 -------+
+    /_|_\\  ------- MASTERNODE INSTALLER v4 -------+
  |                                                  |
  |   Welcome to the Bulwark Masternode Installer!   |::
  |                                                  |::
