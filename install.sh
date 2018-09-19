@@ -492,10 +492,9 @@ fi
 
 echo ""
 
-echo -n "Current block: "
-until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do
-  echo -ne "$(su -c "bulwark-cli getinfo" $USER | grep blocks | awk '{print $3}' | cut -d ',' -f 1)... "
-  sleep 10
+until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do 
+  echo -ne "Current block: $(su -c "bulwark-cli getblockcount" $USER)\\r"
+  sleep 1
 done
 
 clear
