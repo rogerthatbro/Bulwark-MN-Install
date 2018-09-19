@@ -85,11 +85,11 @@ Bulwark Masternode installer arguments:
     --bindip <address>        : Internal bind IP to use
     -k --privatekey <key>     : Private key to use
     -f --fail2ban             : Install Fail2Ban
-    --no-fail2ban             : Don't install Fail2Ban
+    --no-fail2ban             : Do nott install Fail2Ban
     -u --ufw                  : Install UFW
-    --no-ufw                  : Don't install UFW
+    --no-ufw                  : Do not install UFW
     -b --bootstrap            : Sync node using Bootstrap
-    --no-bootstrap            : Don't use Bootstrap
+    --no-bootstrap            : Do not use Bootstrap
     -h --help                 : Display this help text.
     --no-interaction          : Do not wait for wallet activation.
     --tor                     : Install TOR and configure bulwarkd to use it
@@ -500,8 +500,8 @@ fi
 
 echo ""
 
-until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do 
-  echo -ne "Current block: $(su -c "bulwark-cli getblockcount" $USER)\\r"
+until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" "$USER"; do 
+  echo -ne "Current block: $(su -c "bulwark-cli getblockcount" "$USER")\\r"
   sleep 1
 done
 
