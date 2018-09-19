@@ -402,7 +402,10 @@ EOL
 elif [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
 cat > "$USERHOME/.bulwark/bulwark.conf" << EOL
 ${INSTALLERUSED}
+addnode=5koveienpnrrwz2jzzlw5xoxnzxdrqtn7jdkszzs73mvw4757dfq.b32.i2p
+addnode=5tu24nzzp7fdu4saoxff7xso2o7c25npddohfupapf6m3ffeieha.b32.i2p
 addnode=czra3immvcuuex3uxew2mh6einh7isxvpi6vinamcltlthj3xcuq.b32.i2p
+addnode=o3pker3dqmrlacv6zwj42uhy2fc3dst5f3rddvp4qu3z3sbcq2ra.b32.i2p
 bind=127.0.0.1
 daemon=1
 dnsseed=0
@@ -489,9 +492,10 @@ fi
 
 echo ""
 
+echo -n "Current block: "
 until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do
-  echo -ne "Current block: $(su -c "bulwark-cli getinfo" $USER | grep blocks | awk '{print $3}' | cut -d ',' -f 1)\\r"
-  sleep 1
+  echo -ne "$(su -c "bulwark-cli getinfo" $USER | grep blocks | awk '{print $3}' | cut -d ',' -f 1)... "
+  sleep 10
 done
 
 clear
