@@ -236,12 +236,38 @@ if [ -z "$BOOTSTRAP" ]; then
   read -erp "Do you want to use our bootstrap file to speed the syncing process? [Y/n] : " BOOTSTRAP
 fi
 
-if [ -z "$TOR" ]; then
+if [[ "$I2PREADY" == "y" && "$TOR" != "y" && "$TOR" != "Y" && "$I2P" != "y" && "$I2P" != "Y" ]]; then
+  echo ""
+  echo "Please select which networking system you want to use."
+  PS3='Please enter your choice: '
+  OPTIONS=("Clearnet" "TOR" "I2P")
+  select OPTION in "${OPTIONS[@]}"
+  do
+    case $OPTION in
+      "Clearnet")
+        TOR="n"
+        I2P="n"
+        break
+        ;;
+      "TOR")
+        echo "TOR selected."
+        TOR="y"
+        I2P="n"
+        break
+        ;;
+      "I2P")
+        echo "I2P selected."
+        TOR="n"
+        I2P="y"
+        break
+        ;;
+      *)
+        echo "Incorrect option, please type 1, 2 or 3."
+        ;;
+    esac
+  done
+elif [[ "$I2PREADY" == 'n' && -z "$TOR" && -z "$I2P" ]]; then
   read -erp "Would you like to use bulwarkd via TOR? [y/N] : " TOR
-fi
-
-if [[ "$I2PREADY" == "y" && "$TOR" != "Y" && "$TOR" != "y" ]]; then # TODO: Check if I2P is not currently set
-  read -erp "Would you like to use bulwarkd via I2P? [y/N] : " I2P
 fi
 
 clear
