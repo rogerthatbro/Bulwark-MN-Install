@@ -316,7 +316,6 @@ fi
 # Install TOR
 if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
   echo "Installing TOR..."
-  ufw deny 52543/tcp
   apt-get -qq install tor
 cat >> /etc/tor/torrc << EOL
 
@@ -347,7 +346,6 @@ fi
 # Install I2P
 if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
   echo "Installing I2P..."
-  ufw deny 52543/tcp
   apt-get -qq install libboost-all-dev libssl-dev doxygen graphviz # removed: git gcc clang cmake
   wget $I2PBINURL && tar xzf $I2PBINARCHIVE && rm $I2PBINARCHIVE
   mv kovri-bin/* /usr/local/bin && rm kovri-bin
