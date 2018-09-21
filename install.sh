@@ -448,9 +448,11 @@ logtimestamps=1
 masternode=1
 masternodeprivkey=${KEY}
 maxconnections=256
+port=34525
 proxy=127.0.0.1:4447
 rpcallowip=127.0.0.1
 rpcpassword=${RPCPASSWORD}
+rpcport=34521
 rpcuser=${RPCUSER}
 server=1
 EOL
