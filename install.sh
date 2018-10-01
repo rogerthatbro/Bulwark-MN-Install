@@ -115,9 +115,8 @@ clear
 
 # These should automatically find the latest version of Bulwark
 
-TARBALLURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4)
-TARBALLNAME=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 9)
-BWKVERSION=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 8)
+TARBALLURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep bulwark-node | grep linux64 | cut -d '"' -f 4)
+TARBALLNAME=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep bulwark-node | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 9)
 BOOTSTRAPURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep bootstrap.dat.xz | grep browser_download_url | cut -d '"' -f 4)
 BOOTSTRAPARCHIVE="bootstrap.dat.xz"
 I2PBINURL="https://github.com/kewagi/kovri/releases/download/v0.1.0-alpha/kovri-0.1.0-alpha.tar.gz"
@@ -139,10 +138,11 @@ if [[ $(free -m | awk '/^Mem:/{print $2}') -lt 850 ]]; then
   exit 1
 fi
 
+# TODO: Uncomment once we release I2P
 # Check if I2P is an option
-if [[ $(free -m | awk '/^Mem:/{print $2}') -gt 1700 ]]; then
-  I2PREADY="y"
-fi
+# if [[ $(free -m | awk '/^Mem:/{print $2}') -gt 1700 ]]; then
+#   I2PREADY="y"
+# fi
 
 # Check if we have enough disk space
 if [[ $(df -k --output=avail / | tail -n1) -lt 10485760 ]]; then
@@ -388,12 +388,8 @@ fi
 
 # Install Bulwark daemon
 wget "$TARBALLURL"
-tar -xzvf "$TARBALLNAME" && mv bin "bulwark-$BWKVERSION"
+tar -xzvf "$TARBALLNAME" --strip=1 -C /usr/local/bin
 rm "$TARBALLNAME"
-cp "./bulwark-$BWKVERSION/bulwarkd" /usr/local/bin
-cp "./bulwark-$BWKVERSION/bulwark-cli" /usr/local/bin
-cp "./bulwark-$BWKVERSION/bulwark-tx" /usr/local/bin
-rm -rf "bulwark-$BWKVERSION"
 
 # Create .bulwark directory
 mkdir "$USERHOME/.bulwark"
