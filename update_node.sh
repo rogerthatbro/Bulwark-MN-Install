@@ -5,9 +5,9 @@ apt-get -qq update
 apt -qqy install curl
 clear
 
-TARBALLURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep bulwark-node | grep linux64 | cut -d '"' -f 4)
-TARBALLNAME=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep bulwark-node | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 9)
-BWKVERSION=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep bulwark-node | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 8)
+TARBALLURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep -e "bulwark-node.*linux64" | cut -d '"' -f 4)
+TARBALLNAME=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep -e "bulwark-node.*linux64" | cut -d '"' -f 4 | cut -d "/" -f 9)
+BWKVERSION=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep -e "bulwark-node.*linux64" | cut -d '"' -f 4 | cut -d "/" -f 8)
 
 clear
 echo "This script will update your masternode to version $BWKVERSION"
