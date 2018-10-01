@@ -3,6 +3,7 @@
 # Make installer interactive and select normal mode by default.
 INTERACTIVE="y"
 ADVANCED="n"
+I2PREADY="n"
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]
@@ -69,6 +70,10 @@ case $key in
     TOR="y"
     shift
     ;;
+     --i2p)
+    I2P="y"
+    shift
+    ;;
     -h|--help)
     cat << EOL
 
@@ -80,14 +85,15 @@ Bulwark Masternode installer arguments:
     --bindip <address>        : Internal bind IP to use
     -k --privatekey <key>     : Private key to use
     -f --fail2ban             : Install Fail2Ban
-    --no-fail2ban             : Don't install Fail2Ban
+    --no-fail2ban             : Do nott install Fail2Ban
     -u --ufw                  : Install UFW
-    --no-ufw                  : Don't install UFW
+    --no-ufw                  : Do not install UFW
     -b --bootstrap            : Sync node using Bootstrap
-    --no-bootstrap            : Don't use Bootstrap
+    --no-bootstrap            : Do not use Bootstrap
     -h --help                 : Display this help text.
     --no-interaction          : Do not wait for wallet activation.
     --tor                     : Install TOR and configure bulwarkd to use it
+    --i2p                     : Install I2P (Requires 2GB of RAM)
 
 EOL
     exit
@@ -103,16 +109,20 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 clear
 
 # Make sure curl is installed
-apt -qqy install curl
+apt-get update
+apt-get install -qqy curl
 clear
 
 # These should automatically find the latest version of Bulwark
 
-TARBALLURL=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4`
-TARBALLNAME=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 9`
-BWKVERSION=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep linux64 | cut -d '"' -f 4 | cut -d "/" -f 8`
-BOOTSTRAPURL=`curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep bootstrap.dat.xz | grep browser_download_url | cut -d '"' -f 4`
+TARBALLURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep -e "bulwark-node.*linux64" | cut -d '"' -f 4)
+TARBALLNAME=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep -e "bulwark-node.*linux64" | cut -d '"' -f 4 | cut -d "/" -f 9)
+BOOTSTRAPURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep bootstrap.dat.xz | grep browser_download_url | cut -d '"' -f 4)
 BOOTSTRAPARCHIVE="bootstrap.dat.xz"
+I2PBINURL="https://github.com/kewagi/kovri/releases/download/v0.1.0-alpha/kovri-0.1.0-alpha.tar.gz"
+I2PBINARCHIVE="kovri-0.1.0-alpha.tar.gz"
+I2PCONFURL="https://github.com/kewagi/kovri/releases/download/v0.1.0-alpha/kovri-conf.tar.gz"
+I2PCONFARCHIVE="kovri-conf.tar.gz"
 
 #!/bin/bash
 
@@ -123,13 +133,19 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Check if we have enough memory
-if [[ `free -m | awk '/^Mem:/{print $2}'` -lt 850 ]]; then
+if [[ $(free -m | awk '/^Mem:/{print $2}') -lt 850 ]]; then
   echo "This installation requires at least 1GB of RAM.";
   exit 1
 fi
 
+# TODO: Uncomment once we release I2P
+# Check if I2P is an option
+# if [[ $(free -m | awk '/^Mem:/{print $2}') -gt 1700 ]]; then
+#   I2PREADY="y"
+# fi
+
 # Check if we have enough disk space
-if [[ `df -k --output=avail / | tail -n1` -lt 10485760 ]]; then
+if [[ $(df -k --output=avail / | tail -n1) -lt 10485760 ]]; then
   echo "This installation requires at least 10GB of free disk space.";
   exit 1
 fi
@@ -143,7 +159,7 @@ systemctl --version >/dev/null 2>&1 || { echo "systemd is required. Are you usin
 
 # Get our current IP
 if [ -z "$EXTERNALIP" ]; then
-EXTERNALIP=`dig +short myip.opendns.com @resolver1.opendns.com`
+EXTERNALIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 fi
 clear
 
@@ -152,10 +168,10 @@ echo "
     ___T_
    | o o |
    |__-__|
-   /| []|\\
- ()/|___|\()
+   /| []|\\\\
+ ()/|___|\\()
     |_|_|
-    /_|_\  ------- MASTERNODE INSTALLER v3 -------+
+    /_|_\\  ------- MASTERNODE INSTALLER v4 -------+
  |                                                  |
  |   Welcome to the Bulwark Masternode Installer!   |::
  |                                                  |::
@@ -194,10 +210,10 @@ fi
 INSTALLERUSED="#Used Basic Install"
 fi
 
-USERHOME=`eval echo "~$USER"`
+USERHOME=$(eval echo "~$USER")
 
 if [ -z "$ARGUMENTIP" ]; then
-  read -e -p "Server IP Address: " -i $EXTERNALIP -e EXTERNALIP
+  read -erp "Server IP Address: " -i "$EXTERNALIP" -e EXTERNALIP
 fi
 
 if [ -z "$BINDIP" ]; then
@@ -205,30 +221,70 @@ if [ -z "$BINDIP" ]; then
 fi
 
 if [ -z "$KEY" ]; then
-  read -e -p "Masternode Private Key (e.g. 7edfjLCUzGczZi3JQw8GHp434R9kNY33eFyMGeKRymkB56G4324h # THE KEY YOU GENERATED EARLIER) : " KEY
+  read -erp "Masternode Private Key (e.g. 7edfjLCUzGczZi3JQw8GHp434R9kNY33eFyMGeKRymkB56G4324h # THE KEY YOU GENERATED EARLIER) : " KEY
 fi
 
 if [ -z "$FAIL2BAN" ]; then
-  read -e -p "Install Fail2ban? [Y/n] : " FAIL2BAN
+  read -erp "Install Fail2ban? [Y/n] : " FAIL2BAN
 fi
 
 if [ -z "$UFW" ]; then
-  read -e -p "Install UFW and configure ports? [Y/n] : " UFW
+  read -erp "Install UFW and configure ports? [Y/n] : " UFW
 fi
 
 if [ -z "$BOOTSTRAP" ]; then
-  read -e -p "Do you want to use our bootstrap file to speed the syncing process? [Y/n] : " BOOTSTRAP
+  read -erp "Do you want to use our bootstrap file to speed the syncing process? [Y/n] : " BOOTSTRAP
 fi
 
-if [ -z "$TOR" ]; then
-  read -e -p "Would you like to use bulwarkd via TOR? [y/N] : " TOR
+if [[ "$I2PREADY" == "y" && "$TOR" != "y" && "$TOR" != "Y" && "$I2P" != "y" && "$I2P" != "Y" ]]; then
+  echo ""
+  echo "Please select which networking system you want to use."
+  PS3='Please enter your choice: '
+  OPTIONS=("Clearnet" "TOR" "I2P")
+  select OPTION in "${OPTIONS[@]}"
+  do
+    case $OPTION in
+      "Clearnet")
+        TOR="n"
+        I2P="n"
+        break
+        ;;
+      "TOR")
+        echo "TOR selected."
+        TOR="y"
+        I2P="n"
+        break
+        ;;
+      "I2P")
+        echo "I2P selected."
+        TOR="n"
+        I2P="y"
+        break
+        ;;
+      *)
+        echo "Incorrect option, please type 1, 2 or 3."
+        ;;
+    esac
+  done
+elif [[ "$I2PREADY" == 'n' && -z "$TOR" && -z "$I2P" ]]; then
+  read -erp "Would you like to use bulwarkd via TOR? [y/N] : " TOR
 fi
 
 clear
 
+if [[ ($I2P = "y" || $I2P = "Y") && $I2PREADY != "y" ]];then 
+  echo "Can't install with I2P, not enough RAM. Exiting."
+  exit 1
+fi
+
+if [[ ("$TOR" == "y" || "$TOR" == "Y") && ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+  echo "Can't use both TOR and I2P. Exiting."
+  exit 1
+fi
+
 # Generate random passwords
-RPCUSER=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
-RPCPASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+RPCUSER=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
+RPCPASSWORD=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 # update packages and upgrade Ubuntu
 echo "Installing dependencies..."
@@ -287,74 +343,136 @@ EOL
   sleep 5 # Give tor enough time to connect before we continue
 fi
 
+# Install I2P
+if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+  echo "Installing I2P..."
+  apt-get -qq install libboost-all-dev libssl-dev doxygen graphviz # removed: git gcc clang cmake
+  wget $I2PBINURL && tar xzf $I2PBINARCHIVE && rm $I2PBINARCHIVE
+  mv kovri-bin/* /usr/local/bin && rm kovri-bin
+  chown $USER:$USER /usr/local/bin/kovri* && chmod ug+x /usr/local/bin/kovri*
+  mkdir "$USERHOME/.kovri"
+  wget $I2PCONFURL && tar xzf $I2PCONFARCHIVE -C "$USERHOME/.kovri/" && rm $I2PCONFARCHIVE
+  chown -R $USER:$USER "$USERHOME/.kovri"
+  cat > /etc/systemd/system/kovri.service << EOL
+[Unit]
+Description=Kovri I2P
+After=network.target
+[Service]
+Type=simple
+User=${USER}
+WorkingDirectory=${USERHOME}
+ExecStart=/usr/local/bin/kovri
+Restart=on-failure
+RestartSec=1m
+StartLimitIntervalSec=5m
+StartLimitInterval=5m
+StartLimitBurst=3
+[Install]
+WantedBy=multi-user.target
+EOL
+  systemctl enable kovri
+  systemctl start kovri
+  echo "Waiting for kovri to finish connecting, this can take a few minutes."
+  until curl -x http://localhost:4446 http://check.kovri.i2p --fail &>/dev/null; do
+    echo -ne "Connecting... \\ \\r"
+    sleep 1
+    echo -ne "Connecting... | \\r"
+    sleep 1
+    echo -ne "Connecting... / \\r"
+    sleep 1
+    echo -ne "Connecting... - \\r"
+    sleep 1
+  done
+  I2PB32KEY=$(cat "$USERHOME/.kovri/client/keys/bulwarkd.dat.b32.txt")
+fi
+
 # Install Bulwark daemon
-wget $TARBALLURL
-tar -xzvf $TARBALLNAME && mv bin bulwark-$BWKVERSION
-rm $TARBALLNAME
-cp ./bulwark-$BWKVERSION/bulwarkd /usr/local/bin
-cp ./bulwark-$BWKVERSION/bulwark-cli /usr/local/bin
-cp ./bulwark-$BWKVERSION/bulwark-tx /usr/local/bin
-rm -rf bulwark-$BWKVERSION
+wget "$TARBALLURL"
+tar -xzvf "$TARBALLNAME" --strip-components 1 -C /usr/local/bin
+rm "$TARBALLNAME"
 
 # Create .bulwark directory
-mkdir $USERHOME/.bulwark
+mkdir "$USERHOME/.bulwark"
 
 # Install bootstrap file
 if [[ ("$BOOTSTRAP" == "y" || "$BOOTSTRAP" == "Y" || "$BOOTSTRAP" == "") ]]; then
   echo "Installing bootstrap file..."
-  wget $BOOTSTRAPURL && xz -cd $BOOTSTRAPARCHIVE > $USERHOME/.bulwark/bootstrap.dat && rm $BOOTSTRAPARCHIVE
+  wget "$BOOTSTRAPURL" && xz -cd $BOOTSTRAPARCHIVE > "$USERHOME/.bulwark/bootstrap.dat" && rm $BOOTSTRAPARCHIVE
 fi
 
 # Create bulwark.conf
-touch $USERHOME/.bulwark/bulwark.conf
+touch "$USERHOME/.bulwark/bulwark.conf"
 
 # Set TORHOSTNAME if it exists.
 if [[ -f /var/lib/tor/hidden_service/hostname ]]; then
-  TORHOSTNAME=`cat /var/lib/tor/hidden_service/hostname`
+  TORHOSTNAME=$(cat /var/lib/tor/hidden_service/hostname)
 fi
 
-# We need a different conf for TOR support
 if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
 
-cat > $USERHOME/.bulwark/bulwark.conf << EOL
-rpcuser=${RPCUSER}
-rpcpassword=${RPCPASSWORD}
-rpcallowip=127.0.0.1
-listen=1
-server=1
+cat > "$USERHOME/.bulwark/bulwark.conf" << EOL
+${INSTALLERUSED}
+bind=127.0.0.1
 daemon=1
+dnsseed=0
+externalip=${TORHOSTNAME}
+listen=1
 logtimestamps=1
+masternode=1
+masternodeprivkey=${KEY}
 maxconnections=256
 onion=127.0.0.1:9050
 onlynet=tor
-bind=127.0.0.1
-dnsseed=0
-masternodeprivkey=${KEY}
-masternode=1
-externalip=${TORHOSTNAME}
+rpcallowip=127.0.0.1
+rpcpassword=${RPCPASSWORD}
+rpcuser=${RPCUSER}
+server=1
 EOL
 
+elif [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+cat > "$USERHOME/.bulwark/bulwark.conf" << EOL
+${INSTALLERUSED}
+addnode=5koveienpnrrwz2jzzlw5xoxnzxdrqtn7jdkszzs73mvw4757dfq.b32.i2p
+addnode=5tu24nzzp7fdu4saoxff7xso2o7c25npddohfupapf6m3ffeieha.b32.i2p
+addnode=czra3immvcuuex3uxew2mh6einh7isxvpi6vinamcltlthj3xcuq.b32.i2p
+addnode=o3pker3dqmrlacv6zwj42uhy2fc3dst5f3rddvp4qu3z3sbcq2ra.b32.i2p
+bind=127.0.0.1
+daemon=1
+dnsseed=0
+listen=1
+logtimestamps=1
+masternode=1
+masternodeprivkey=${KEY}
+maxconnections=256
+port=34525
+proxy=127.0.0.1:4447
+rpcallowip=127.0.0.1
+rpcpassword=${RPCPASSWORD}
+rpcport=34521
+rpcuser=${RPCUSER}
+server=1
+EOL
 else
 
-cat > $USERHOME/.bulwark/bulwark.conf << EOL
+cat > "$USERHOME/.bulwark/bulwark.conf" << EOL
 ${INSTALLERUSED}
-rpcuser=${RPCUSER}
-rpcpassword=${RPCPASSWORD}
-rpcallowip=127.0.0.1
-listen=1
-server=1
-daemon=1
-logtimestamps=1
-maxconnections=256
-externalip=${EXTERNALIP}
 bind=${BINDIP}:52543
+daemon=1
+externalip=${EXTERNALIP}
+listen=1
+logtimestamps=1
+masternode=1
 masternodeaddr=${EXTERNALIP}
 masternodeprivkey=${KEY}
-masternode=1
+maxconnections=256
+rpcallowip=127.0.0.1
+rpcpassword=${RPCPASSWORD}
+rpcuser=${RPCUSER}
+server=1
 EOL
 fi
-chmod 0600 $USERHOME/.bulwark/bulwark.conf
-chown -R $USER:$USER $USERHOME/.bulwark
+chmod 0600 "$USERHOME/.bulwark/bulwark.conf"
+chown -R $USER:$USER "$USERHOME/.bulwark"
 
 sleep 1
 
@@ -396,13 +514,18 @@ clear
 
 echo "Your masternode is syncing. Please wait for this process to finish."
 echo "This can take up to a few hours. Do not close this window."
-if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
+if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then 
   echo "The TOR address of your masternode is: $TORHOSTNAME"
 fi
+
+if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+  echo "The I2P address of your masternode is: $I2PB32KEY"
+fi
+
 echo ""
 
-until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" $USER; do
-  echo -ne "Current block: "`su -c "bulwark-cli getinfo" $USER | grep blocks | awk '{print $3}' | cut -d ',' -f 1`'\r'
+until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" "$USER"; do 
+  echo -ne "Current block: $(su -c "bulwark-cli getblockcount" "$USER")\\r"
   sleep 1
 done
 
@@ -418,7 +541,7 @@ EOL
 
 
 if [[ $INTERACTIVE = "y" ]]; then
-  read -p "Press Enter to continue after you've done that. " -n1 -s
+  read -rp "Press Enter to continue after you've done that. " -n1 -s
 fi
 
 clear
@@ -430,4 +553,13 @@ clear
 su -c "/usr/local/bin/bulwark-cli masternode status" $USER
 sleep 5
 
-echo "" && echo "Masternode setup completed." && echo ""
+echo "" && echo "Masternode setup completed." 
+if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then 
+  echo "The TOR address of your masternode is: $TORHOSTNAME"
+fi
+
+if [[ ("$I2P" == "y" || "$I2P" == "Y") ]]; then
+  echo "The I2P address of your masternode is: $I2PB32KEY"
+fi
+
+echo ""
