@@ -5,9 +5,7 @@ apt-get -qq update
 apt -qqy install curl
 clear
 
-ASSETS=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | jq '.assets')
-
-BOOTSTRAPURL=$(echo $ASSETS | jq -r '.[] | select(.name == "bootstrap.dat.xz").browser_download_url')
+BOOTSTRAPURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep bootstrap.dat.xz | grep browser_download_url | cut -d '"' -f 4)
 BOOTSTRAPARCHIVE="bootstrap.dat.xz"
 
 clear
@@ -74,7 +72,7 @@ until [ -n "$(bulwark-cli getconnectioncount 2>/dev/null)"  ]; do
   sleep 1
 done
 
-until su -c "bulwark-cli mnsync status 2>/dev/null" "$USER" | jq '.IsBlockchainSynced' | grep -q true; do
+until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" "$USER"; do 
   echo -ne "Current block: $(su -c "bulwark-cli getblockcount" "$USER")\\r"
   sleep 1
 done
