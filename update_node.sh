@@ -22,6 +22,9 @@ fi
 USER=$(ps -o user= -p "$(pgrep bulwarkd)")
 USERHOME=$(eval echo "~$USER")
 
+echo "Downloading new version..."
+wget "$TARBALLURL"
+
 echo "Shutting down masternode..."
 if [ -e /etc/systemd/system/bulwarkd.service ]; then
   systemctl stop bulwarkd
@@ -31,7 +34,6 @@ fi
 
 echo "Installing Bulwark $BWKVERSION..."
 rm /usr/local/bin/bulwarkd /usr/local/bin/bulwark-cli
-wget "$TARBALLURL"
 tar -xzvf "$TARBALLNAME" -C /usr/local/bin
 rm "$TARBALLNAME"
 
@@ -95,7 +97,7 @@ echo "Your masternode is syncing. Please wait for this process to finish."
 echo "This can take up to a few hours. Do not close this window."
 echo ""
 
-until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" "$USER"; do 
+until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\": true' > /dev/null" "$USER"; do 
   echo -ne "Current block: $(su -c "bulwark-cli getblockcount" "$USER")\\r"
   sleep 1
 done
