@@ -388,7 +388,7 @@ fi
 
 # Install Bulwark daemon
 wget "$TARBALLURL"
-tar -xzvf "$TARBALLNAME" --strip-components 1 -C /usr/local/bin
+tar -xzvf "$TARBALLNAME" -C /usr/local/bin
 rm "$TARBALLNAME"
 
 # Create .bulwark directory
