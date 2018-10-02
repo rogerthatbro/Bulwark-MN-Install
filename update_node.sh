@@ -32,7 +32,7 @@ fi
 echo "Installing Bulwark $BWKVERSION..."
 rm /usr/local/bin/bulwarkd /usr/local/bin/bulwark-cli
 wget "$TARBALLURL"
-tar -xzvf "$TARBALLNAME" --strip-components 1 -C /usr/local/bin
+tar -xzvf "$TARBALLNAME" -C /usr/local/bin
 rm "$TARBALLNAME"
 
 if [ -e /usr/bin/bulwarkd ];then rm -rf /usr/bin/bulwarkd; fi
