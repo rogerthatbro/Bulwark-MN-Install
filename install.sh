@@ -108,16 +108,18 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 clear
 
-# Make sure curl is installed
+# Make sure curl and jq are installed
 apt-get update
-apt-get install -qqy curl
+apt-get install -qqy curl jq
 clear
 
 # These should automatically find the latest version of Bulwark
 
-TARBALLURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep -e "bulwark-node.*linux64" | cut -d '"' -f 4)
-TARBALLNAME=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep -e "bulwark-node.*linux64" | cut -d '"' -f 4 | cut -d "/" -f 9)
-BOOTSTRAPURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep bootstrap.dat.xz | grep browser_download_url | cut -d '"' -f 4)
+ASSETS=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | jq '.assets')
+
+TARBALLURL=$(echo $ASSETS | jq -r '.[] | select(.name|test("bulwark-node.*linux64")).browser_download_url')
+TARBALLNAME=$(echo $TARBALLURL | cut -d "/" -f 9)
+BOOTSTRAPURL=$(echo $ASSETS | jq -r '.[] | select(.name == "bootstrap.dat.xz").browser_download_url')
 BOOTSTRAPARCHIVE="bootstrap.dat.xz"
 I2PBINURL="https://github.com/kewagi/kovri/releases/download/v0.1.0-alpha/kovri-0.1.0-alpha.tar.gz"
 I2PBINARCHIVE="kovri-0.1.0-alpha.tar.gz"
@@ -524,7 +526,7 @@ fi
 
 echo ""
 
-until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\": true' > /dev/null" "$USER"; do 
+until su -c "bulwark-cli mnsync status 2>/dev/null" "$USER" | jq '.IsBlockchainSynced' | grep -q true; do
   echo -ne "Current block: $(su -c "bulwark-cli getblockcount" "$USER")\\r"
   sleep 1
 done
