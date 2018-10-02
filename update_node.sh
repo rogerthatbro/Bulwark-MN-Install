@@ -5,11 +5,9 @@ apt-get -qq update
 apt -qqy install curl
 clear
 
-ASSETS=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | jq '.assets')
-
-TARBALLURL=$(echo $ASSETS | jq -r '.[] | select(.name|test("bulwark-node.*linux64")).browser_download_url')
-TARBALLNAME=$(echo $TARBALLURL | cut -d "/" -f 9)
-BWKVERSION=$(echo $TARBALLURL | cut -d "/" -f 8)
+TARBALLURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep -e "bulwark-node.*linux64" | cut -d '"' -f 4)
+TARBALLNAME=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep -e "bulwark-node.*linux64" | cut -d '"' -f 4 | cut -d "/" -f 9)
+BWKVERSION=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep browser_download_url | grep -e "bulwark-node.*linux64" | cut -d '"' -f 4 | cut -d "/" -f 8)
 
 clear
 echo "This script will update your masternode to version $BWKVERSION"
@@ -97,7 +95,7 @@ echo "Your masternode is syncing. Please wait for this process to finish."
 echo "This can take up to a few hours. Do not close this window."
 echo ""
 
-until su -c "bulwark-cli mnsync status 2>/dev/null" "$USER" | jq '.IsBlockchainSynced' | grep -q true; do
+until su -c "bulwark-cli mnsync status 2>/dev/null | grep '\"IsBlockchainSynced\" : true' > /dev/null" "$USER"; do 
   echo -ne "Current block: $(su -c "bulwark-cli getblockcount" "$USER")\\r"
   sleep 1
 done
