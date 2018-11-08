@@ -158,8 +158,14 @@ apt-get install git dnsutils systemd -y > /dev/null 2>&1
 systemctl --version >/dev/null 2>&1 || { echo "systemd is required. Are you using Ubuntu 16.04?"  >&2; exit 1; }
 
 # Get our current IP
+IPV4=$(dig +short myip.opendns.com @resolver1.opendns.com)
+IPV6=$(dig +short -6 myip.opendns.com aaaa @resolver1.ipv6-sandbox.opendns.com)
 if [ -z "$EXTERNALIP" ]; then
-EXTERNALIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+  if [ ! -z "$IPV4" ]; then
+    EXTERNALIP="$IPV4"
+  else
+    EXTERNALIP="$IPV6"
+  fi
 fi
 clear
 
@@ -266,7 +272,7 @@ if [[ "$I2PREADY" == "y" && "$TOR" != "y" && "$TOR" != "Y" && "$I2P" != "y" && "
         ;;
     esac
   done
-elif [[ "$I2PREADY" == 'n' && -z "$TOR" && -z "$I2P" ]]; then
+elif [[ "$I2PREADY" == 'n' && -z "$TOR" && -z "$I2P" && ! -z "$IPV4" ]]; then
   read -erp "Would you like to use bulwarkd via TOR? [y/N] : " TOR
 fi
 
@@ -456,13 +462,13 @@ else
 
 cat > "$USERHOME/.bulwark/bulwark.conf" << EOL
 ${INSTALLERUSED}
-bind=${BINDIP}:52543
+bind=[${BINDIP}]:52543
 daemon=1
-externalip=${EXTERNALIP}
+externalip=[${EXTERNALIP}]
 listen=1
 logtimestamps=1
 masternode=1
-masternodeaddr=${EXTERNALIP}
+masternodeaddr=[${EXTERNALIP}]
 masternodeprivkey=${KEY}
 maxconnections=256
 rpcallowip=127.0.0.1
