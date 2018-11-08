@@ -272,7 +272,7 @@ if [[ "$I2PREADY" == "y" && "$TOR" != "y" && "$TOR" != "Y" && "$I2P" != "y" && "
         ;;
     esac
   done
-elif [[ "$I2PREADY" == 'n' && -z "$TOR" && -z "$I2P" ]]; then
+elif [[ "$I2PREADY" == 'n' && -z "$TOR" && -z "$I2P" && ! -z "$IPV4" ]]; then
   read -erp "Would you like to use bulwarkd via TOR? [y/N] : " TOR
 fi
 
