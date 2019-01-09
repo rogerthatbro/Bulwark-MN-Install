@@ -110,7 +110,7 @@ clear
 
 # Make sure curl is installed
 apt-get update
-apt-get install -qqy curl
+apt-get install -qqy curl jq
 clear
 
 # These should automatically find the latest version of Bulwark
@@ -161,7 +161,7 @@ systemctl --version >/dev/null 2>&1 || { echo "systemd is required. Are you usin
 IPV4=$(dig +short myip.opendns.com @resolver1.opendns.com)
 IPV6=$(dig +short -6 myip.opendns.com aaaa @resolver1.ipv6-sandbox.opendns.com)
 if [ -z "$EXTERNALIP" ]; then
-  if [ ! -z "$IPV4" ]; then
+  if [ -n "$IPV4" ]; then
     EXTERNALIP="$IPV4"
   else
     EXTERNALIP="$IPV6"
@@ -272,7 +272,7 @@ if [[ "$I2PREADY" == "y" && "$TOR" != "y" && "$TOR" != "Y" && "$I2P" != "y" && "
         ;;
     esac
   done
-elif [[ "$I2PREADY" == 'n' && -z "$TOR" && -z "$I2P" && ! -z "$IPV4" ]]; then
+elif [[ "$I2PREADY" == 'n' && -z "$TOR" && -z "$I2P" && -n "$IPV4" ]]; then
   read -erp "Would you like to use bulwarkd via TOR? [y/N] : " TOR
 fi
 
@@ -499,15 +499,50 @@ StartLimitBurst=3
 WantedBy=multi-user.target
 EOL
 systemctl enable bulwarkd
-echo "Starting bulwarkd..."
+echo "Starting bulwarkd, will check status in 60 seconds..."
 systemctl start bulwarkd
 
-sleep 10
+sleep 60
 
 if ! systemctl status bulwarkd | grep -q "active (running)"; then
   echo "ERROR: Failed to start bulwarkd. Please contact support."
   exit
 fi
+
+echo "Installing Bulwark Autoupdater..."
+rm -f /usr/local/bin/bulwarkupdate
+curl -o /usr/local/bin/bulwarkupdate https://raw.githubusercontent.com/bulwark-crypto/Bulwark-MN-Install/master/bulwarkupdate
+chmod a+x /usr/local/bin/bulwarkupdate
+
+if [ ! -f /etc/systemd/system/bulwarkupdate.service ]; then
+cat > /etc/systemd/system/bulwarkupdate.service << EOL
+[Unit]
+Description=Bulwarks's Masternode Autoupdater
+After=network-online.target
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=${USERHOME}
+ExecStart=/usr/local/bin/bulwarkupdate
+EOL
+fi
+
+if [ ! -f /etc/systemd/system/bulwarkupdate.timer ]; then
+cat > /etc/systemd/system/bulwarkupdate.timer << EOL
+[Unit]
+Description=Bulwarks's Masternode Autoupdater Timer
+
+[Timer]
+OnBootSec=1d
+OnUnitActiveSec=1d 
+
+[Install]
+WantedBy=timers.target
+EOL
+fi
+
+systemctl enable bulwarkupdate.timer
+systemctl start bulwarkupdate.timer
 
 echo "Waiting for wallet to load..."
 until su -c "bulwark-cli getinfo 2>/dev/null | grep -q \"version\"" $USER; do

@@ -2,7 +2,7 @@
 
 # Make sure curl is installed
 apt-get -qq update
-apt -qqy install curl
+apt -qqy install curl jq
 clear
 
 BOOTSTRAPURL=$(curl -s https://api.github.com/repos/bulwark-crypto/bulwark/releases/latest | grep bootstrap.dat.xz | grep browser_download_url | cut -d '"' -f 4)
@@ -48,7 +48,8 @@ else
   su -c "bulwarkd -daemon" "$USER"
 fi
 
-sleep 10
+echo "Starting bulwarkd, will check status in 60 seconds..."
+sleep 60
 
 clear
 
