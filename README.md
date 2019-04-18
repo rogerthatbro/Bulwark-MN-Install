@@ -65,9 +65,7 @@ Once you see "Masternode setup completed." on screen, you are done.
 
 ## Video Guide
 
-<div class="video-wrapper">
-<iframe width="740" height="416" src="https://www.youtube.com/embed/W1284pD1gTc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
+[![Watch the video](https://img.youtube.com/vi/W1284pD1gTc/maxresdefault.jpg)](https://www.youtube.com/watch?v=W1284pD1gTc)
 
 
 
