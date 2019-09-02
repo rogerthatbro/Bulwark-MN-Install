@@ -326,7 +326,6 @@ if [[ ("$TOR" == "y" || "$TOR" == "Y") ]]; then
 cat >> /etc/tor/torrc << EOL
 
 ### BULWARK CONFIGURATION ###
-HiddenServiceDir /var/lib/tor/hidden_service/
 ClientOnly 1
 ControlPort 9051
 NumEntryGuards 4
